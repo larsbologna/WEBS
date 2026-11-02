@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-serif-display: "Instrument Serif", Georgia, serif;
+  --animate-fade-up: fade-up .7s cubic-bezier(.2,.7,.2,1) both;
+  --animate-fade-in: fade-in .4s ease both;
+  --animate-pop: pop .35s cubic-bezier(.2,1.4,.4,1) both;
+  --animate-slide-in: slide-in .35s cubic-bezier(.2,.8,.2,1) both;
+  --animate-slide-up: slide-up .35s cubic-bezier(.2,.8,.2,1) both;
+  --animate-marquee: marquee 28s linear infinite;
+}
+
+@keyframes fade-up { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: none } }
+@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes pop { 0% { transform: scale(.6); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+@keyframes slide-in { from { transform: translateX(100%) } to { transform: none } }
+@keyframes slide-up { from { transform: translateY(100%) } to { transform: none } }
+@keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+body { margin: 0; background: #0b0b12; -webkit-font-smoothing: antialiased; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+.reveal.is-in { opacity: 1; transform: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .reveal { opacity: 1; transform: none; }
+}
