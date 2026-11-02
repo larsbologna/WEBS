@@ -73,6 +73,24 @@ export const DEMOS: DemoMeta[] = [
     image: '1628009368231-7bb7cfcb0def', fallback: 'linear-gradient(135deg,#0f766e,#fb923c)',
     features: ['Turnos', 'Vacunación', 'Equipo', 'Consejos'],
   },
+  {
+    slug: 'tecnologia', num: '11', rubro: 'Tecnología', name: 'Conecta Tech', category: 'Comercios',
+    description: 'Cables, streaming, cargadores y accesorios con buscador, guía "¿qué cable necesito?" y carrito.',
+    image: '1550009158-9ebf69173e03', fallback: 'linear-gradient(135deg,#1d4ed8,#0f172a)',
+    features: ['Buscador', 'Guía de cables', 'Combos', 'Checkout'],
+  },
+  {
+    slug: 'iphones', num: '12', rubro: 'Tienda de iPhones', name: 'Órbita Mobile', category: 'Comercios',
+    description: 'iPhones nuevos y seleccionados con capacidad, color, batería, plan canje y precio en dólares o pesos.',
+    image: '1592750475338-74b7b21085ab', fallback: 'linear-gradient(135deg,#4338ca,#111827)',
+    features: ['Plan canje', 'USD / ARS', 'Batería', 'Reserva'],
+  },
+  {
+    slug: 'petshop', num: '13', rubro: 'Petshop', name: 'Colita Feliz', category: 'Comercios',
+    description: 'Alimento por tamaño de bolsa, juguetes y accesorios, calculadora de ración y compra recurrente.',
+    image: '1450778869180-41d0601e046e', fallback: 'linear-gradient(135deg,#f59e0b,#2b1747)',
+    features: ['Por especie', 'Calculadora', 'Suscripción', 'Carrito'],
+  },
 ]
 
 export const CATEGORIES: Category[] = ['Gastronomía', 'Belleza y cuidado', 'Comercios', 'Salud']

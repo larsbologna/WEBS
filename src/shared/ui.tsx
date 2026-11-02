@@ -1,17 +1,20 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, Check, CheckCheck, ChevronLeft, LayoutGrid, Lightbulb, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, CheckCheck, ChevronLeft, LayoutDashboard, LayoutGrid, Lightbulb, X } from 'lucide-react'
 import { createStore, safeRead, safeWrite, useStore } from './store'
 import { cx } from './format'
 import { DEMOS, BRAND } from '../demos/meta'
 
 /* ───────────── Imagen con respaldo ───────────── */
-export function SmartImg({ src, alt, className, style, fallback = 'linear-gradient(135deg,#d6d3d1,#a8a29e)', eager }: {
+export function SmartImg({ src, alt, className, style, fallback = 'linear-gradient(135deg,#d6d3d1,#a8a29e)', eager, fallbackContent, contain }: {
   src: string; alt: string; className?: string; style?: CSSProperties; fallback?: string; eager?: boolean
+  /** contenido ilustrado que se ve mientras carga o si la foto no está disponible */
+  fallbackContent?: ReactNode; contain?: boolean
 }) {
   const [state, setState] = useState<'loading' | 'ok' | 'error'>('loading')
   return (
     <div className={cx('@container relative overflow-hidden', className)} style={{ background: fallback, ...style }}>
+      {fallbackContent && state !== 'ok' && <div className="absolute inset-0 grid place-items-center">{fallbackContent}</div>}
       {state !== 'error' && (
         <img
           src={src}
@@ -20,10 +23,10 @@ export function SmartImg({ src, alt, className, style, fallback = 'linear-gradie
           decoding="async"
           onLoad={() => setState('ok')}
           onError={() => setState('error')}
-          className={cx('absolute inset-0 h-full w-full object-cover transition-opacity duration-700', state === 'ok' ? 'opacity-100' : 'opacity-0')}
+          className={cx('absolute inset-0 h-full w-full transition-opacity duration-700', contain ? 'object-contain p-3' : 'object-cover', state === 'ok' ? 'opacity-100' : 'opacity-0')}
         />
       )}
-      {state === 'error' && (
+      {state === 'error' && !fallbackContent && (
         <div className="absolute inset-0 flex items-end p-3">
           <span className="hidden rounded-full bg-black/25 px-2.5 @[10rem]:inline py-1 text-[11px] font-medium text-white/90 backdrop-blur">{alt}</span>
         </div>
@@ -225,6 +228,10 @@ function DemoDock({ slug }: { slug: string }) {
             </div>
             <Link to="/showroom" className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-white/5">
               <LayoutGrid className="h-4 w-4 text-lime-300" /> Volver al showroom
+            </Link>
+            <Link to={`/demo/${slug}/admin`} className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-white/5">
+              <LayoutDashboard className="h-4 w-4 text-lime-300" /> Panel de administración
+              <span className="ml-auto rounded-full bg-lime-300/15 px-2 py-0.5 text-[10px] font-bold text-lime-300">NUEVO</span>
             </Link>
             <button onClick={() => { setOpen(false); nav(`/demo/${next.slug}`) }} className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm hover:bg-white/5">
               <ArrowRight className="h-4 w-4 text-white/60" /> Siguiente: {next.rubro}

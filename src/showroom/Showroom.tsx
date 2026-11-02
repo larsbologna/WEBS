@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, CalendarCheck, Search, ShoppingCart, Smartphone, MessageCircle, Sparkles, MapPin, Zap, X } from 'lucide-react'
+import { ArrowUpRight, LayoutDashboard, CalendarCheck, Search, ShoppingCart, Smartphone, MessageCircle, Sparkles, MapPin, Zap, X } from 'lucide-react'
 import { DEMOS, CATEGORIES, BRAND, type Category } from '../demos/meta'
 import { SmartImg, WhatsAppSim, Reveal } from '../shared/ui'
 import { cx, img } from '../shared/format'
@@ -108,7 +108,8 @@ export default function Showroom() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {list.map((d, i) => (
                 <Reveal key={d.slug} delay={(i % 3) * 70}>
-                  <Link to={`/demo/${d.slug}`} className="group block overflow-hidden rounded-3xl bg-white/[.04] ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:ring-lime-300/50">
+                  <div className="group overflow-hidden rounded-3xl bg-white/[.04] ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:ring-lime-300/50">
+                  <Link to={`/demo/${d.slug}`} className="block">
                     <div className="relative">
                       <SmartImg src={img(d.image, 700, 460)} alt={`${d.rubro} — ${d.name}`} fallback={d.fallback} className="aspect-[16/10.5] transition duration-700 group-hover:scale-[1.04]" />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b12] via-transparent to-transparent" />
@@ -127,11 +128,17 @@ export default function Showroom() {
                           <span key={f} className="rounded-full bg-white/[.06] px-2.5 py-1 text-[11.5px] text-white/70">{f}</span>
                         ))}
                       </div>
-                      <div className="mt-5 flex items-center justify-between rounded-2xl bg-white px-4 py-3 font-bold text-black transition group-hover:bg-lime-300">
-                        Ver demostración <ArrowUpRight className="h-5 w-5 transition group-hover:rotate-45" />
-                      </div>
                     </div>
                   </Link>
+                  <div className="grid grid-cols-[1fr_auto] gap-2 px-5 pb-5">
+                    <Link to={`/demo/${d.slug}`} className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 font-bold text-black transition hover:bg-lime-300">
+                      Ver demostración <ArrowUpRight className="h-5 w-5" />
+                    </Link>
+                    <Link to={`/demo/${d.slug}/admin`} className="flex items-center gap-1.5 rounded-2xl bg-white/[.08] px-3.5 py-3 text-[13px] font-bold text-white ring-1 ring-white/10 transition hover:bg-white/15" aria-label={`Panel de administración de ${d.name}`}>
+                      <LayoutDashboard className="h-4 w-4 text-lime-300" /> Panel
+                    </Link>
+                  </div>
+                  </div>
                 </Reveal>
               ))}
             </div>
@@ -145,12 +152,13 @@ export default function Showroom() {
               Una web que <span className="font-serif-display font-normal italic text-lime-300">trabaja</span> por vos.
             </h2>
           </Reveal>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {[
               { icon: Search, t: 'Te encuentran en Google', d: 'Cuando alguien busca tu rubro en la zona, aparecés vos con fotos, horarios y ubicación.' },
               { icon: MessageCircle, t: 'Consultas por WhatsApp', d: 'Pedidos y consultas llegan ordenados, con todo el detalle. Menos idas y vueltas.' },
               { icon: CalendarCheck, t: 'Turnos sin atender el teléfono', d: 'Tus clientes reservan solos, de día o de noche, mientras vos trabajás.' },
               { icon: Zap, t: 'Sin comisiones de apps', d: 'Tu web es tuya: no pagás un porcentaje por cada venta como en las plataformas.' },
+              { icon: LayoutDashboard, t: 'Tu panel de control', d: 'Ganancias, stock, pedidos y pagos del mes en tu celular. Probalo con el botón "Panel" de cada demo.' },
             ].map(({ icon: I, t, d }, i) => (
               <Reveal key={t} delay={i * 60} className="rounded-3xl border border-white/10 bg-white/[.03] p-5">
                 <I className="h-6 w-6 text-lime-300" />

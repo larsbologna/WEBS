@@ -1,6 +1,6 @@
 # Showroom de webs comerciales — Iván | Gestor de Presencia Online
 
-Herramienta de venta: 10 demos interactivas de páginas web para comercios locales, pensadas para mostrar desde el celular en menos de dos minutos.
+Herramienta de venta: 13 demos interactivas, cada una con su panel de administración, de páginas web para comercios locales, pensadas para mostrar desde el celular en menos de dos minutos.
 
 > Son **demostraciones comerciales**. Negocios, productos, precios, profesionales y reseñas son ficticios. No hay backend: pedidos, turnos, pagos y WhatsApp están simulados visualmente.
 
@@ -12,7 +12,8 @@ Herramienta de venta: 10 demos interactivas de páginas web para comercios local
    - volver al showroom,
    - pasar a la demo siguiente o anterior,
    - activar o desactivar las **notas de beneficios** (etiquetas violetas "Para tu negocio: …" que explican al comerciante para qué sirve cada sección). Conviene apagarlas para que el dueño vea la web "limpia" y prenderlas para argumentar.
-4. Cada carrito, favorito o turno de prueba queda guardado en el navegador del celular (localStorage), así que la demo se puede retomar.
+4. **Panel de administración:** botón **Panel** en cada tarjeta del showroom, o "Panel de administración" en el menú flotante (ruta `/#/demo/<rubro>/admin`). Muestra cómo el dueño vería su negocio: ingresos, ganancia neta, gráfico diario, lo más vendido, pedidos o agenda, stock con márgenes y pedidos al proveedor, y pagos del mes (alquiler, proveedores, servicios, sueldos, impuestos) que se marcan como pagados. El ingreso es de demostración: tocá "Ingresar".
+5. Cada carrito, favorito o turno de prueba queda guardado en el navegador del celular (localStorage), así que la demo se puede retomar.
 
 ## Ejecutar en tu computadora
 
@@ -58,9 +59,11 @@ src/
   demos/meta.ts           listado de demos (nombre, rubro, categoría, imagen)
   demos/<slug>/index.tsx  cada demo, con su identidad visual propia
   shared/                 carrito, turnos, toasts, modal de WhatsApp, botón flotante
+  admin/                  panel de administración compartido (datos de ejemplo determinísticos)
+  demos/<slug>/admin.ts   configuración del panel de cada negocio (productos, insumos, servicios, gastos)
 ```
 
-Para agregar un rubro nuevo: creá `src/demos/<slug>/index.tsx` y sumá su entrada en `meta.ts`. La ruta se registra sola.
+Para agregar un rubro nuevo: creá `src/demos/<slug>/index.tsx` y `admin.ts`, y sumá su entrada en `meta.ts`. Las rutas se registran solas.
 
 ## Resumen de funcionalidades por rubro
 
@@ -76,6 +79,12 @@ Para agregar un rubro nuevo: creá `src/demos/<slug>/index.tsx` y sumá su entra
 | 08 | Dietética | Natural Market | Natural kraft, Nunito y Caveat | Buscador, categorías con íconos, filtros (Sin TACC, vegano, orgánico, keto, ofertas), **venta por peso** (100 g a 1 kg y ajuste de a 50 g con precio en vivo), productos por unidad, ofertas con **cuenta regresiva**, retiro o envío, simulación de armado del pedido y WhatsApp |
 | 09 | Óptica | Visión Óptica | Clínico moderno blanco y azul, Outfit | **Guía por forma de rostro** que filtra estilos, catálogo de recetados y de sol, filtros por estilo, ficha con color y cristales (estimación de precio), "mi selección" para probar en el local, servicios ópticos, **solicitud de turno** con motivo y obra social, contacto |
 | 10 | Veterinaria | Huellitas Veterinaria | Cálido y amigable, verde azulado y naranja, Baloo 2 | Servicios con precio orientativo, **calculadora de vacunas** (perro o gato, según fecha de nacimiento), profesionales con matrícula, cómo atendemos y preguntas frecuentes, consejos con artículos, **turno con perfil de mascota** (especie, nombre, servicio, opción a domicilio), modal de guardia 24 h, WhatsApp |
+
+| 11 | Tecnología | Conecta Tech | Retail tech blanco y cobalto, Plus Jakarta Sans + mono | Buscador con sugerencias, 8 categorías (cables, streaming, cargadores, almacenamiento, audio, periféricos, redes, gaming), **asistente "¿qué cable necesito?"**, stock visible y "últimas unidades", ficha con especificaciones y compatibilidad, **comprados juntos**, carrito con envío gratis y checkout con cuotas |
+| 12 | Tienda de iPhones | Órbita Mobile | Nocturno índigo y menta, Urbanist + mono | Nuevos y seleccionados (batería y estado), **precio en USD o ARS**, capacidad y color con teléfono ilustrado, accesorios, **plan canje** que descuenta el usado en el carrito, reserva sin cargo con código y WhatsApp |
+| 13 | Petshop | Colita Feliz | Alegre amarillo y ciruela, Fredoka | Filtro por especie, bolsas de alimento por tamaño con precio por kg, **compra programada con 10% off**, **calculadora de ración** y duración de la bolsa, 2x1 en snacks automático, envío en el día |
+
+**Panel de administración (las 13 demos):** acceso de demostración, resumen de 30 días contra los 30 anteriores (ingresos, ganancia neta, gastos, ticket o turnos), gráfico de ingresos diarios, ranking de productos o servicios, medios de pago, resultado del mes por categoría de gasto, alertas de stock bajo y pagos vencidos; pedidos con estados (tiendas) o agenda por profesional con atendido o ausente (servicios); stock o insumos con márgenes, ajuste y pedido al proveedor; pagos con vencimientos y alta de gastos nuevos. Los cambios se guardan en el celular.
 
 **Showroom:** buscador por rubro (sin importar acentos), filtros por categoría (Gastronomía, Belleza y cuidado, Comercios, Salud), tarjetas con imagen, rubro, nombre, descripción, etiqueta "Demo interactiva" y botón "Ver demostración", sección de beneficios, proceso de trabajo y contacto con Iván por WhatsApp (simulado).
 
