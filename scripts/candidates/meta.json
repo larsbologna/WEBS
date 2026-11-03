@@ -1609,5 +1609,128 @@
    "license": "CC0",
    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/Scent_Bottle_SAAM-1929.8.245.47_1.jpg/960px-Scent_Bottle_SAAM-1929.8.245.47_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   }
- ]
+ ],
+ "tecnologia/s2b": [
+  {
+   "k": 0,
+   "src": "commons",
+   "title": "File:Apple set top box back.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/Apple_set_top_box_back.jpg/960px-Apple_set_top_box_back.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "Public domain",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/Apple_set_top_box_back.jpg/960px-Apple_set_top_box_back.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  },
+  {
+   "k": 1,
+   "src": "commons",
+   "title": "File:Pace DC757X cable box mod.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Pace_DC757X_cable_box_mod.jpg/960px-Pace_DC757X_cable_box_mod.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "Public domain",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Pace_DC757X_cable_box_mod.jpg/960px-Pace_DC757X_cable_box_mod.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  },
+  {
+   "k": 2,
+   "src": "commons",
+   "title": "File:China Telecom IPTV set-top box in Jiangmen, Guangdong.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/China_Telecom_IPTV_set-top_box_in_Jiangmen%2C_Guangdong.jpg/960px-China_Telecom_IPTV_set-top_box_in_Jiangmen%2C_Guangdong.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "CC0",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/China_Telecom_IPTV_set-top_box_in_Jiangmen%2C_Guangdong.jpg/960px-China_Telecom_IPTV_set-top_box_in_Jiangmen%2C_Guangdong.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  }
+ ],
+ "tecnologia/s2c": [
+  {
+   "k": 0,
+   "src": "commons",
+   "title": "File:DroidBOX Android Kodi TV Box.JPG",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/2/22/DroidBOX_Android_Kodi_TV_Box.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "license": "Public domain",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/2/22/DroidBOX_Android_Kodi_TV_Box.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+  },
+  {
+   "k": 1,
+   "src": "commons",
+   "title": "File:Android Things logo.png",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Android_Things_logo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "license": "Public domain",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Android_Things_logo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+  },
+  {
+   "k": 2,
+   "src": "commons",
+   "title": "File:Android Marshmallow logo.png",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Android_Marshmallow_logo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "license": "Public domain",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Android_Marshmallow_logo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+  },
+  {
+   "k": 3,
+   "src": "commons",
+   "title": "File:MediaKind Mediaroom Program Guide.png",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/MediaKind_Mediaroom_Program_Guide.png/960px-MediaKind_Mediaroom_Program_Guide.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "CC0",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/MediaKind_Mediaroom_Program_Guide.png/960px-MediaKind_Mediaroom_Program_Guide.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  },
+  {
+   "k": 4,
+   "src": "commons",
+   "title": "File:New Android TV logo.png",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/New_Android_TV_logo.png/960px-New_Android_TV_logo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "Public domain",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/New_Android_TV_logo.png/960px-New_Android_TV_logo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  },
+  {
+   "k": 5,
+   "src": "commons",
+   "title": "File:Android Go edition logo (New).png",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Android_Go_edition_logo_%28New%29.png/960px-Android_Go_edition_logo_%28New%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "Public domain",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Android_Go_edition_logo_%28New%29.png/960px-Android_Go_edition_logo_%28New%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  },
+  {
+   "k": 6,
+   "src": "commons",
+   "title": "File:TVpad Logo.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/TVpad_Logo.jpg/960px-TVpad_Logo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "Public domain",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/TVpad_Logo.jpg/960px-TVpad_Logo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  }
+ ],
+ "tecnologia/a2b": [
+  {
+   "k": 0,
+   "src": "commons",
+   "title": "File:USB Hub Internals.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/USB_Hub_Internals.jpg/960px-USB_Hub_Internals.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "Public domain",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/USB_Hub_Internals.jpg/960px-USB_Hub_Internals.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  },
+  {
+   "k": 1,
+   "src": "commons",
+   "title": "File:USB Hub Internals.gif",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/49/USB_Hub_Internals.gif?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "license": "Public domain",
+   "thumb": "https://upload.wikimedia.org/wikipedia/commons/4/49/USB_Hub_Internals.gif?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+  },
+  {
+   "k": 2,
+   "src": "commons",
+   "title": "File:USB hub Gembird.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/USB_hub_Gembird.jpg/960px-USB_hub_Gembird.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "CC0",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7e/USB_hub_Gembird.jpg/960px-USB_hub_Gembird.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  }
+ ],
+ "tecnologia/h2b": [],
+ "tecnologia/e2b": [
+  {
+   "k": 0,
+   "src": "commons",
+   "title": "File:USA phone charger at airport 01.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/USA_phone_charger_at_airport_01.jpg/960px-USA_phone_charger_at_airport_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "CC0",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/USA_phone_charger_at_airport_01.jpg/960px-USA_phone_charger_at_airport_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  }
+ ],
+ "tecnologia/d4b": [],
+ "tecnologia/n2b": []
 }
