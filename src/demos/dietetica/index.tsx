@@ -16,12 +16,12 @@ const CATS: { c: Cat; e: string }[] = [
 ]
 const P: Prod[] = [
   { id: 'a1', name: 'Almendras peladas', cat: 'Frutos secos', kg: 21800, img: '1508061253366-f7da158b6d46', tags: ['Sin TACC', 'Vegano', 'Keto'], off: 15, emoji: '🌰' },
-  { id: 'a2', name: 'Nueces mariposa', cat: 'Frutos secos', kg: 18900, img: '1574570068036-e97e8c8c24a1', tags: ['Sin TACC', 'Vegano', 'Keto'], emoji: '🌰' },
+  { id: 'a2', name: 'Nueces mariposa', cat: 'Frutos secos', kg: 18900, img: 'fotos/dietetica/a2.jpg', tags: ['Sin TACC', 'Vegano', 'Keto'], emoji: '🌰' },
   { id: 'a3', name: 'Castañas de cajú', cat: 'Frutos secos', kg: 24500, img: '1563292769-4e05b684851a', tags: ['Sin TACC', 'Vegano'], emoji: '🥜' },
   { id: 'a4', name: 'Mix energético', cat: 'Frutos secos', kg: 16900, img: '1599599810769-bcde5a160d32', tags: ['Vegano'], off: 10, emoji: '🥜' },
-  { id: 'a5', name: 'Pasas de uva morochas', cat: 'Frutos secos', kg: 7900, img: '1596097635121-14b63b7a0c19', tags: ['Sin TACC', 'Vegano'], emoji: '🍇' },
+  { id: 'a5', name: 'Pasas de uva morochas', cat: 'Frutos secos', kg: 7900, img: 'fotos/dietetica/a5.jpg', tags: ['Sin TACC', 'Vegano'], emoji: '🍇' },
   { id: 's1', name: 'Semillas de chía', cat: 'Semillas', kg: 9800, img: '1615485500704-8e990f9900f7', tags: ['Sin TACC', 'Vegano', 'Orgánico', 'Keto'], emoji: '⚫' },
-  { id: 's2', name: 'Semillas de lino', cat: 'Semillas', kg: 4900, img: '1590080876876-5674a9b9f1b3', tags: ['Sin TACC', 'Vegano', 'Keto'], emoji: '🟤' },
+  { id: 's2', name: 'Semillas de lino', cat: 'Semillas', kg: 4900, img: 'fotos/dietetica/s2.jpg', tags: ['Sin TACC', 'Vegano', 'Keto'], emoji: '🟤' },
   { id: 's3', name: 'Girasol pelado', cat: 'Semillas', kg: 6200, img: '1515543904379-3d757afe72e4', tags: ['Sin TACC', 'Vegano'], off: 20, emoji: '🌻' },
   { id: 'h1', name: 'Harina de almendras', cat: 'Harinas', kg: 26900, img: '1574323347407-f5e1ad6d020b', tags: ['Sin TACC', 'Keto'], emoji: '🌾' },
   { id: 'h2', name: 'Harina integral orgánica', cat: 'Harinas', kg: 2900, img: '1509440159596-0249088772ff', tags: ['Orgánico', 'Vegano'], emoji: '🌾' },
@@ -36,7 +36,7 @@ const P: Prod[] = [
   { id: 'e1', name: 'Miel pura de abejas', cat: 'Endulzantes', unit: 8900, unitLabel: 'frasco 500 g', img: '1587049352846-4a222e784d38', tags: ['Sin TACC'], emoji: '🍯' },
   { id: 'e2', name: 'Azúcar mascabo', cat: 'Endulzantes', kg: 5600, img: '1581441363689-1f3c3c414635', tags: ['Vegano', 'Orgánico'], emoji: '🟫' },
   { id: 'x1', name: 'Cúrcuma molida', cat: 'Especias', kg: 14900, img: '1596040033229-a9821ebd058d', tags: ['Sin TACC', 'Vegano', 'Orgánico'], emoji: '🟡' },
-  { id: 'x2', name: 'Pimentón ahumado', cat: 'Especias', kg: 16800, img: '1599909631178-4a5a4a6a3a32', tags: ['Sin TACC', 'Vegano'], emoji: '🔴' },
+  { id: 'x2', name: 'Pimentón ahumado', cat: 'Especias', kg: 16800, img: 'fotos/dietetica/x2.jpg', tags: ['Sin TACC', 'Vegano'], emoji: '🔴' },
 ]
 const WEIGHTS = [0.1, 0.25, 0.5, 1]
 const TAGS: Tag[] = ['Sin TACC', 'Vegano', 'Orgánico', 'Keto']

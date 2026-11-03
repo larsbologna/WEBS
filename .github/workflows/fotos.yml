@@ -1,0 +1,19 @@
+name: Fotos
+
+# Comprueba que todas las fotos del sitio carguen. Corre en cada cambio y en cada PR;
+# la publicación (deploy.yml) también la ejecuta y se cancela si alguna falla.
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/check-photos.mjs

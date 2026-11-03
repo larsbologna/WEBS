@@ -8,31 +8,31 @@ import { cx, img, money } from '../../shared/format'
 const Y = '#ffcf33', PLUM = '#2b1747', CORAL = '#ff6b5b', CREAM = '#fffaf0', MINT = '#c7f0db'
 type Sp = 'Perro' | 'Gato'
 type Cat = 'Alimento' | 'Snacks' | 'Juguetes' | 'Camas y accesorios' | 'Higiene y salud'
-type Prod = { id: string; name: string; brand: string; sp: Sp | 'Ambos'; cat: Cat; price?: number; sizes?: { kg: number; p: number }[]; color?: string; icon?: typeof Bone; desc: string; tag?: string; was?: number }
+type Prod = { id: string; name: string; brand: string; sp: Sp | 'Ambos'; cat: Cat; price?: number; sizes?: { kg: number; p: number }[]; color?: string; icon?: typeof Bone; img: string; desc: string; tag?: string; was?: number }
 
 const P: Prod[] = [
-  { id: 'f1', name: 'Adulto Raza Mediana', brand: 'NutriCan', sp: 'Perro', cat: 'Alimento', color: '#e85d3f', sizes: [{ kg: 3, p: 18900 }, { kg: 7.5, p: 39900 }, { kg: 15, p: 69900 }, { kg: 20, p: 86900 }], desc: 'Pollo y arroz, con omega 3 para piel y pelo brillante. Para perros de 10 a 25 kg.', tag: 'Más vendido' },
-  { id: 'f2', name: 'Cachorro', brand: 'NutriCan', sp: 'Perro', cat: 'Alimento', color: '#3fa7e8', sizes: [{ kg: 3, p: 21900 }, { kg: 7.5, p: 46900 }, { kg: 15, p: 82900 }], desc: 'Croqueta chica con DHA para el desarrollo. Desde los 2 meses.' },
-  { id: 'f3', name: 'Senior 7+', brand: 'Vital Pro', sp: 'Perro', cat: 'Alimento', color: '#7a5bd6', sizes: [{ kg: 3, p: 23900 }, { kg: 7.5, p: 51900 }, { kg: 15, p: 92900 }], desc: 'Con glucosamina para las articulaciones y menos calorías.' },
-  { id: 'f4', name: 'Raza Pequeña', brand: 'Vital Pro', sp: 'Perro', cat: 'Alimento', color: '#e8a83f', sizes: [{ kg: 1, p: 8900 }, { kg: 3, p: 22900 }, { kg: 7.5, p: 49900 }], desc: 'Croqueta mini y alta palatabilidad para perros de hasta 10 kg.' },
-  { id: 'g1', name: 'Adulto Premium', brand: 'Gatuno', sp: 'Gato', cat: 'Alimento', color: '#d63f7a', sizes: [{ kg: 1, p: 9900 }, { kg: 3, p: 26900 }, { kg: 7.5, p: 58900 }], desc: 'Salmón y pollo, control de bolas de pelo.', tag: 'Más vendido' },
-  { id: 'g2', name: 'Castrados', brand: 'Gatuno', sp: 'Gato', cat: 'Alimento', color: '#3fbfa0', sizes: [{ kg: 1, p: 10900 }, { kg: 3, p: 28900 }, { kg: 7.5, p: 62900 }], desc: 'Bajo en grasas y con cuidado urinario.' },
-  { id: 'g3', name: 'Gatitos', brand: 'Gatuno', sp: 'Gato', cat: 'Alimento', color: '#f08a3c', sizes: [{ kg: 1, p: 11500 }, { kg: 3, p: 30900 }], desc: 'Para gatitos de 2 a 12 meses.' },
-  { id: 's1', name: 'Huesitos dentales x7', brand: 'NutriCan', sp: 'Perro', cat: 'Snacks', price: 4900, icon: Bone, desc: 'Ayudan a reducir el sarro. Uno por día.', tag: '2x1' },
-  { id: 's2', name: 'Bocaditos de carne 200 g', brand: 'Vital Pro', sp: 'Perro', cat: 'Snacks', price: 5900, icon: Bone, desc: 'Ideales para el adiestramiento.' },
-  { id: 's3', name: 'Snack cremoso de atún x4', brand: 'Gatuno', sp: 'Gato', cat: 'Snacks', price: 3900, icon: Heart, desc: 'El premio que más les gusta. Se da en la mano.', tag: '2x1' },
-  { id: 't1', name: 'Pelota de goma indestructible', brand: 'Juguetón', sp: 'Perro', cat: 'Juguetes', price: 6900, icon: Sparkles, desc: 'Rebota, flota y resiste mordidas fuertes.' },
-  { id: 't2', name: 'Soga para tironear', brand: 'Juguetón', sp: 'Perro', cat: 'Juguetes', price: 5400, icon: Sparkles, desc: 'Algodón trenzado, limpia los dientes mientras juega.' },
-  { id: 't3', name: 'Varita con plumas', brand: 'Juguetón', sp: 'Gato', cat: 'Juguetes', price: 3900, icon: Sparkles, desc: 'Estimula el instinto de caza.' },
-  { id: 't4', name: 'Rascador torre 80 cm', brand: 'Michi Home', sp: 'Gato', cat: 'Juguetes', price: 59900, was: 69900, icon: Cat, desc: 'Tres niveles, cucha y pompón colgante.' },
-  { id: 'a1', name: 'Cama acolchada mediana', brand: 'Siesta', sp: 'Ambos', cat: 'Camas y accesorios', price: 34900, icon: BedDouble, desc: 'Lavable, base antideslizante. 70 × 55 cm.' },
-  { id: 'a2', name: 'Collar + correa reflectivos', brand: 'Paseo', sp: 'Perro', cat: 'Camas y accesorios', price: 14900, icon: PawPrint, desc: 'Visibles de noche. Talles S a XL.' },
-  { id: 'a3', name: 'Comedero doble de acero', brand: 'Michi Home', sp: 'Ambos', cat: 'Camas y accesorios', price: 12900, icon: PawPrint, desc: 'Antideslizante, apto lavavajillas.' },
-  { id: 'a4', name: 'Transportadora mediana', brand: 'Paseo', sp: 'Ambos', cat: 'Camas y accesorios', price: 49900, icon: Store, desc: 'Apta avión, hasta 10 kg.' },
-  { id: 'h1', name: 'Piedras sanitarias 4 kg', brand: 'Michi Home', sp: 'Gato', cat: 'Higiene y salud', price: 8900, icon: Bath, desc: 'Aglomerantes, con control de olores.', tag: 'Más vendido' },
-  { id: 'h2', name: 'Bandeja sanitaria con tapa', brand: 'Michi Home', sp: 'Gato', cat: 'Higiene y salud', price: 24900, icon: Bath, desc: 'Con filtro de carbón y puerta vaivén.' },
-  { id: 'h3', name: 'Shampoo de avena 500 ml', brand: 'Siesta', sp: 'Perro', cat: 'Higiene y salud', price: 7900, icon: Bath, desc: 'Para pieles sensibles.' },
-  { id: 'h4', name: 'Pipeta antipulgas', brand: 'Vital Pro', sp: 'Ambos', cat: 'Higiene y salud', price: 9900, icon: Heart, desc: 'Protección por 30 días contra pulgas y garrapatas.' },
+  { id: 'f1', img: '1589924691995-400dc9ecc119', name: 'Adulto Raza Mediana', brand: 'NutriCan', sp: 'Perro', cat: 'Alimento', color: '#e85d3f', sizes: [{ kg: 3, p: 18900 }, { kg: 7.5, p: 39900 }, { kg: 15, p: 69900 }, { kg: 20, p: 86900 }], desc: 'Pollo y arroz, con omega 3 para piel y pelo brillante. Para perros de 10 a 25 kg.', tag: 'Más vendido' },
+  { id: 'f2', img: '1576201836106-db1758fd1c97', name: 'Cachorro', brand: 'NutriCan', sp: 'Perro', cat: 'Alimento', color: '#3fa7e8', sizes: [{ kg: 3, p: 21900 }, { kg: 7.5, p: 46900 }, { kg: 15, p: 82900 }], desc: 'Croqueta chica con DHA para el desarrollo. Desde los 2 meses.' },
+  { id: 'f3', img: '1615751072497-5f5169febe17', name: 'Senior 7+', brand: 'Vital Pro', sp: 'Perro', cat: 'Alimento', color: '#7a5bd6', sizes: [{ kg: 3, p: 23900 }, { kg: 7.5, p: 51900 }, { kg: 15, p: 92900 }], desc: 'Con glucosamina para las articulaciones y menos calorías.' },
+  { id: 'f4', img: '1608096299210-db7e38487075', name: 'Raza Pequeña', brand: 'Vital Pro', sp: 'Perro', cat: 'Alimento', color: '#e8a83f', sizes: [{ kg: 1, p: 8900 }, { kg: 3, p: 22900 }, { kg: 7.5, p: 49900 }], desc: 'Croqueta mini y alta palatabilidad para perros de hasta 10 kg.' },
+  { id: 'g1', img: '1574158622682-e40e69881006', name: 'Adulto Premium', brand: 'Gatuno', sp: 'Gato', cat: 'Alimento', color: '#d63f7a', sizes: [{ kg: 1, p: 9900 }, { kg: 3, p: 26900 }, { kg: 7.5, p: 58900 }], desc: 'Salmón y pollo, control de bolas de pelo.', tag: 'Más vendido' },
+  { id: 'g2', img: '1573865526739-10659fec78a5', name: 'Castrados', brand: 'Gatuno', sp: 'Gato', cat: 'Alimento', color: '#3fbfa0', sizes: [{ kg: 1, p: 10900 }, { kg: 3, p: 28900 }, { kg: 7.5, p: 62900 }], desc: 'Bajo en grasas y con cuidado urinario.' },
+  { id: 'g3', img: '1570018144715-43110363d70a', name: 'Gatitos', brand: 'Gatuno', sp: 'Gato', cat: 'Alimento', color: '#f08a3c', sizes: [{ kg: 1, p: 11500 }, { kg: 3, p: 30900 }], desc: 'Para gatitos de 2 a 12 meses.' },
+  { id: 's1', img: '1568640347023-a616a30bc3bd', name: 'Huesitos dentales x7', brand: 'NutriCan', sp: 'Perro', cat: 'Snacks', price: 4900, icon: Bone, desc: 'Ayudan a reducir el sarro. Uno por día.', tag: '2x1' },
+  { id: 's2', img: '1601758228041-f3b2795255f1', name: 'Bocaditos de carne 200 g', brand: 'Vital Pro', sp: 'Perro', cat: 'Snacks', price: 5900, icon: Bone, desc: 'Ideales para el adiestramiento.' },
+  { id: 's3', img: '1597843786411-a7fa8ad44a95', name: 'Snack cremoso de atún x4', brand: 'Gatuno', sp: 'Gato', cat: 'Snacks', price: 3900, icon: Heart, desc: 'El premio que más les gusta. Se da en la mano.', tag: '2x1' },
+  { id: 't1', img: 'fotos/petshop/t1.jpg', name: 'Pelota de goma indestructible', brand: 'Juguetón', sp: 'Perro', cat: 'Juguetes', price: 6900, icon: Sparkles, desc: 'Rebota, flota y resiste mordidas fuertes.' },
+  { id: 't2', img: 'fotos/petshop/t2.jpg', name: 'Soga para tironear', brand: 'Juguetón', sp: 'Perro', cat: 'Juguetes', price: 5400, icon: Sparkles, desc: 'Algodón trenzado, limpia los dientes mientras juega.' },
+  { id: 't3', img: '1592194996308-7b43878e84a6', name: 'Varita con plumas', brand: 'Juguetón', sp: 'Gato', cat: 'Juguetes', price: 3900, icon: Sparkles, desc: 'Estimula el instinto de caza.' },
+  { id: 't4', img: '1545249390-6bdfa286032f', name: 'Rascador torre 80 cm', brand: 'Michi Home', sp: 'Gato', cat: 'Juguetes', price: 59900, was: 69900, icon: Cat, desc: 'Tres niveles, cucha y pompón colgante.' },
+  { id: 'a1', img: 'fotos/petshop/a1.jpg', name: 'Cama acolchada mediana', brand: 'Siesta', sp: 'Ambos', cat: 'Camas y accesorios', price: 34900, icon: BedDouble, desc: 'Lavable, base antideslizante. 70 × 55 cm.' },
+  { id: 'a2', img: 'fotos/petshop/a2.jpg', name: 'Collar + correa reflectivos', brand: 'Paseo', sp: 'Perro', cat: 'Camas y accesorios', price: 14900, icon: PawPrint, desc: 'Visibles de noche. Talles S a XL.' },
+  { id: 'a3', img: 'fotos/petshop/a3.jpg', name: 'Comedero doble de acero', brand: 'Michi Home', sp: 'Ambos', cat: 'Camas y accesorios', price: 12900, icon: PawPrint, desc: 'Antideslizante, apto lavavajillas.' },
+  { id: 'a4', img: 'fotos/petshop/a4.jpg', name: 'Transportadora mediana', brand: 'Paseo', sp: 'Ambos', cat: 'Camas y accesorios', price: 49900, icon: Store, desc: 'Apta avión, hasta 10 kg.' },
+  { id: 'h1', img: 'fotos/petshop/h1.jpg', name: 'Piedras sanitarias 4 kg', brand: 'Michi Home', sp: 'Gato', cat: 'Higiene y salud', price: 8900, icon: Bath, desc: 'Aglomerantes, con control de olores.', tag: 'Más vendido' },
+  { id: 'h2', img: 'fotos/petshop/h2.jpg', name: 'Bandeja sanitaria con tapa', brand: 'Michi Home', sp: 'Gato', cat: 'Higiene y salud', price: 24900, icon: Bath, desc: 'Con filtro de carbón y puerta vaivén.' },
+  { id: 'h3', img: '1516734212186-a967f81ad0d7', name: 'Shampoo de avena 500 ml', brand: 'Siesta', sp: 'Perro', cat: 'Higiene y salud', price: 7900, icon: Bath, desc: 'Para pieles sensibles.' },
+  { id: 'h4', img: '1543466835-00a7907e9de1', name: 'Pipeta antipulgas', brand: 'Vital Pro', sp: 'Ambos', cat: 'Higiene y salud', price: 9900, icon: Heart, desc: 'Protección por 30 días contra pulgas y garrapatas.' },
 ]
 const CATS: Cat[] = ['Alimento', 'Snacks', 'Juguetes', 'Camas y accesorios', 'Higiene y salud']
 const FREQ = [3, 4, 6, 8]
@@ -55,9 +55,18 @@ function Bag({ p, kg, size = 90 }: { p: Prod; kg?: number; size?: number }) {
   )
 }
 function Thumb({ p, className, kg, size }: { p: Prod; className?: string; kg?: number; size?: number }) {
-  if (p.sizes) return <div className={cx('grid place-items-center', className)} style={{ background: `${p.color}1f` }}><Bag p={p} kg={kg} size={size} /></div>
   const I = p.icon ?? PawPrint
-  return <div className={cx('grid place-items-center', className)} style={{ background: p.sp === 'Gato' ? '#ffe3ef' : p.sp === 'Perro' ? '#fff1c7' : MINT }}><div className="grid place-items-center rounded-full bg-white" style={{ width: (size ?? 90) * 0.75, height: (size ?? 90) * 0.75 }}><I style={{ width: (size ?? 90) * 0.38, height: (size ?? 90) * 0.38, color: CORAL }} /></div></div>
+  const bg = p.sizes ? `${p.color}1f` : p.sp === 'Gato' ? '#ffe3ef' : p.sp === 'Perro' ? '#fff1c7' : MINT
+  const art = p.sizes
+    ? <Bag p={p} kg={kg} size={size} />
+    : <div className="grid place-items-center rounded-full bg-white" style={{ width: (size ?? 90) * 0.75, height: (size ?? 90) * 0.75 }}><I style={{ width: (size ?? 90) * 0.38, height: (size ?? 90) * 0.38, color: CORAL }} /></div>
+  const small = (size ?? 90) < 60
+  return (
+    <div className={cx('relative overflow-hidden', className)}>
+      <SmartImg src={img(p.img, small ? 160 : 600, small ? 160 : 600)} alt={p.name} className="h-full w-full" fallback={bg} fallbackContent={art} />
+      {kg && !small && <div className="absolute bottom-2 right-2 rounded-full bg-white px-2 py-0.5 font-(family-name:--fd) text-[13px] font-bold shadow" style={{ color: PLUM }}>{kg.toLocaleString('es-AR')} kg</div>}
+    </div>
+  )
 }
 
 export default function Petshop() {
