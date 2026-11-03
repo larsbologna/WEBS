@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: test -f scripts/photo-queries.json && test ! -f scripts/candidates/meta.json && node scripts/fetch-candidates.mjs || echo "nada que buscar"
+      - run: test -f scripts/photo-queries.json && node scripts/fetch-candidates.mjs || echo "nada que buscar"
       - run: |
           if [ -n "$(git status --porcelain scripts/candidates)" ]; then
             git config user.name "github-actions"
