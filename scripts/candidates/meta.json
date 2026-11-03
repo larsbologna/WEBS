@@ -383,7 +383,16 @@
    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/2_4_and_5Ghz_Wifi_Router_specification.jpg/960px-2_4_and_5Ghz_Wifi_Router_specification.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   }
  ],
- "tecnologia/n2": [],
+ "tecnologia/n2": [
+  {
+   "k": 0,
+   "src": "commons",
+   "title": "File:Netgear-Nighthawk-AC1900-WiFi-Router.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Netgear-Nighthawk-AC1900-WiFi-Router.jpg/960px-Netgear-Nighthawk-AC1900-WiFi-Router.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "license": "Public domain",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Netgear-Nighthawk-AC1900-WiFi-Router.jpg/960px-Netgear-Nighthawk-AC1900-WiFi-Router.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+  }
+ ],
  "petshop/f1": [
   {
    "k": 0,
