@@ -1,52 +1,277 @@
 [
-  ["tecnologia", "h1", "hdmi cable"],
-  ["tecnologia", "h2", "hdmi cable connector"],
-  ["tecnologia", "a1", "usb-c adapter"],
-  ["tecnologia", "a2", "usb c hub laptop"],
-  ["tecnologia", "c2", "usb-c cable"],
-  ["tecnologia", "c3", "phone charging cable"],
-  ["tecnologia", "s2", "tv streaming box remote"],
-  ["tecnologia", "s3", "tv mounted on wall"],
-  ["tecnologia", "e1", "phone charger"],
-  ["tecnologia", "e2", "usb charger adapter"],
-  ["tecnologia", "e4", "power strip"],
-  ["tecnologia", "d1", "usb flash drive"],
-  ["tecnologia", "d2", "usb stick"],
-  ["tecnologia", "d3", "sd card"],
-  ["tecnologia", "d4", "external ssd"],
-  ["tecnologia", "p3", "webcam"],
-  ["tecnologia", "n1", "wifi router"],
-  ["tecnologia", "n2", "wireless router antenna"],
-  ["tecnologia", "n3", "ethernet cable"],
-  ["petshop", "f1", "dog food bowl kibble"],
-  ["petshop", "f2", "puppy eating"],
-  ["petshop", "f3", "senior dog"],
-  ["petshop", "f4", "small dog eating"],
-  ["petshop", "g1", "cat food"],
-  ["petshop", "g2", "cat eating"],
-  ["petshop", "g3", "kitten"],
-  ["petshop", "s1", "dog chew treat"],
-  ["petshop", "s2", "dog treats"],
-  ["petshop", "s3", "cat treat"],
-  ["petshop", "t1", "dog ball"],
-  ["petshop", "t2", "dog rope toy"],
-  ["petshop", "t3", "cat playing toy"],
-  ["petshop", "t4", "cat tree"],
-  ["petshop", "a1", "dog bed"],
-  ["petshop", "a2", "dog leash"],
-  ["petshop", "a3", "pet bowl"],
-  ["petshop", "a4", "pet carrier"],
-  ["petshop", "h1", "cat litter"],
-  ["petshop", "h2", "cat litter box"],
-  ["petshop", "h3", "dog bath"],
-  ["petshop", "h4", "veterinarian dog"],
-  ["iphones", "17pm", "iphone pro"],
-  ["iphones", "17p", "iphone pro camera"],
-  ["iphones", "17", "iphone"],
-  ["iphones", "16", "iphone hand"],
-  ["iphones", "16p-s", "iphone 16 pro"],
-  ["iphones", "15p-s", "iphone 15 pro"],
-  ["iphones", "15-s", "iphone 15"],
-  ["iphones", "14-s", "iphone 14"],
-  ["iphones", "13-s", "iphone 13"]
+[
+"tecnologia",
+"h1",
+"hdmi cable"
+],
+[
+"tecnologia",
+"h2",
+"hdmi cable connector"
+],
+[
+"tecnologia",
+"a1",
+"usb-c adapter"
+],
+[
+"tecnologia",
+"a2",
+"usb c hub laptop"
+],
+[
+"tecnologia",
+"c2",
+"usb-c cable"
+],
+[
+"tecnologia",
+"c3",
+"phone charging cable"
+],
+[
+"tecnologia",
+"s2",
+"tv streaming box remote"
+],
+[
+"tecnologia",
+"s3",
+"tv mounted on wall"
+],
+[
+"tecnologia",
+"e1",
+"phone charger"
+],
+[
+"tecnologia",
+"e2",
+"usb charger adapter"
+],
+[
+"tecnologia",
+"e4",
+"power strip"
+],
+[
+"tecnologia",
+"d1",
+"usb flash drive"
+],
+[
+"tecnologia",
+"d2",
+"usb stick"
+],
+[
+"tecnologia",
+"d3",
+"sd card"
+],
+[
+"tecnologia",
+"d4",
+"external ssd"
+],
+[
+"tecnologia",
+"p3",
+"webcam"
+],
+[
+"tecnologia",
+"n1",
+"wifi router"
+],
+[
+"tecnologia",
+"n2",
+"wireless router antenna"
+],
+[
+"tecnologia",
+"n3",
+"ethernet cable"
+],
+[
+"petshop",
+"f1",
+"dog food bowl kibble"
+],
+[
+"petshop",
+"f2",
+"puppy eating"
+],
+[
+"petshop",
+"f3",
+"senior dog"
+],
+[
+"petshop",
+"f4",
+"small dog eating"
+],
+[
+"petshop",
+"g1",
+"cat food"
+],
+[
+"petshop",
+"g2",
+"cat eating"
+],
+[
+"petshop",
+"g3",
+"kitten"
+],
+[
+"petshop",
+"s1",
+"dog chew treat"
+],
+[
+"petshop",
+"s2",
+"dog treats"
+],
+[
+"petshop",
+"s3",
+"cat treat"
+],
+[
+"petshop",
+"t1",
+"dog ball"
+],
+[
+"petshop",
+"t2",
+"dog rope toy"
+],
+[
+"petshop",
+"t3",
+"cat playing toy"
+],
+[
+"petshop",
+"t4",
+"cat tree"
+],
+[
+"petshop",
+"a1",
+"dog bed"
+],
+[
+"petshop",
+"a2",
+"dog leash"
+],
+[
+"petshop",
+"a3",
+"pet bowl"
+],
+[
+"petshop",
+"a4",
+"pet carrier"
+],
+[
+"petshop",
+"h1",
+"cat litter"
+],
+[
+"petshop",
+"h2",
+"cat litter box"
+],
+[
+"petshop",
+"h3",
+"dog bath"
+],
+[
+"petshop",
+"h4",
+"veterinarian dog"
+],
+[
+"iphones",
+"17pm",
+"iphone pro"
+],
+[
+"iphones",
+"17p",
+"iphone pro camera"
+],
+[
+"iphones",
+"17",
+"iphone"
+],
+[
+"iphones",
+"16",
+"iphone hand"
+],
+[
+"iphones",
+"16p-s",
+"iphone 16 pro"
+],
+[
+"iphones",
+"15p-s",
+"iphone 15 pro"
+],
+[
+"iphones",
+"15-s",
+"iphone 15"
+],
+[
+"iphones",
+"14-s",
+"iphone 14"
+],
+[
+"iphones",
+"13-s",
+"iphone 13"
+],
+[
+"dietetica",
+"a2",
+"walnuts"
+],
+[
+"dietetica",
+"a5",
+"raisins"
+],
+[
+"dietetica",
+"s2",
+"flax seeds"
+],
+[
+"dietetica",
+"x2",
+"paprika powder"
+],
+[
+"perfumeria",
+"p8",
+"perfume bottle"
+]
 ]
