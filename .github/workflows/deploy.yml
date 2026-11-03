@@ -24,6 +24,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Verificar que todos los productos tengan foto
+        run: node scripts/check-photos.mjs
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

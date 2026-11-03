@@ -9,18 +9,18 @@ const BIZ = 'Órbita Mobile'
 const BG = '#0d0f1a', CARD = '#161a2b', LINE = '#262b42', INDIGO = '#818cf8', MINT = '#34d399', TXT = '#e8eaf6'
 const RATE = 1450 // cotización de referencia
 type Cond = 'Nuevo' | 'Seleccionado'
-type Model = { id: string; name: string; cond: Cond; base: number; caps: number[]; colors: { n: string; hex: string }[]; pro?: boolean; battery?: number; grade?: string; chip: string; cam: string; screen: string; tag?: string }
+type Model = { id: string; name: string; cond: Cond; base: number; caps: number[]; colors: { n: string; hex: string }[]; pro?: boolean; battery?: number; grade?: string; chip: string; cam: string; screen: string; tag?: string; img: string }
 
 const MODELS: Model[] = [
-  { id: '17pm', name: 'iPhone 17 Pro Max', cond: 'Nuevo', base: 1799, caps: [256, 512, 1024], pro: true, chip: 'A19 Pro', cam: 'Triple 48 MP · zoom 8×', screen: '6,9" ProMotion 120 Hz', colors: [{ n: 'Naranja cósmico', hex: '#d9773c' }, { n: 'Azul profundo', hex: '#2d3a5c' }, { n: 'Plata', hex: '#d9dadc' }], tag: 'Lanzamiento' },
-  { id: '17p', name: 'iPhone 17 Pro', cond: 'Nuevo', base: 1599, caps: [256, 512, 1024], pro: true, chip: 'A19 Pro', cam: 'Triple 48 MP · zoom 8×', screen: '6,3" ProMotion 120 Hz', colors: [{ n: 'Azul profundo', hex: '#2d3a5c' }, { n: 'Naranja cósmico', hex: '#d9773c' }, { n: 'Plata', hex: '#d9dadc' }] },
-  { id: '17', name: 'iPhone 17', cond: 'Nuevo', base: 1199, caps: [256, 512], chip: 'A19', cam: 'Doble 48 MP', screen: '6,3" ProMotion 120 Hz', colors: [{ n: 'Lavanda', hex: '#b9a7d6' }, { n: 'Salvia', hex: '#a9b79a' }, { n: 'Negro', hex: '#2a2a2c' }, { n: 'Blanco', hex: '#ececec' }], tag: 'Más vendido' },
-  { id: '16', name: 'iPhone 16', cond: 'Nuevo', base: 949, caps: [128, 256], chip: 'A18', cam: 'Doble 48 MP', screen: '6,1" Super Retina', colors: [{ n: 'Ultramar', hex: '#5a6fd6' }, { n: 'Verde azulado', hex: '#7fb3ad' }, { n: 'Rosa', hex: '#f0b8c8' }, { n: 'Negro', hex: '#2a2a2c' }] },
-  { id: '16p-s', name: 'iPhone 16 Pro', cond: 'Seleccionado', base: 1049, caps: [128, 256], pro: true, battery: 94, grade: 'A+', chip: 'A18 Pro', cam: 'Triple 48 MP · zoom 5×', screen: '6,3" ProMotion', colors: [{ n: 'Titanio desierto', hex: '#bfa58a' }, { n: 'Titanio negro', hex: '#3b3b3d' }] },
-  { id: '15p-s', name: 'iPhone 15 Pro', cond: 'Seleccionado', base: 799, caps: [128, 256], pro: true, battery: 89, grade: 'A+', chip: 'A17 Pro', cam: 'Triple 48 MP · zoom 3×', screen: '6,1" ProMotion', colors: [{ n: 'Titanio natural', hex: '#a8a29a' }, { n: 'Titanio azul', hex: '#3e4a5e' }], tag: 'Oportunidad' },
-  { id: '15-s', name: 'iPhone 15', cond: 'Seleccionado', base: 629, caps: [128, 256], battery: 91, grade: 'A', chip: 'A16', cam: 'Doble 48 MP', screen: '6,1" Super Retina', colors: [{ n: 'Rosa', hex: '#f2c9d4' }, { n: 'Negro', hex: '#2f3133' }] },
-  { id: '14-s', name: 'iPhone 14', cond: 'Seleccionado', base: 499, caps: [128, 256], battery: 87, grade: 'A', chip: 'A15', cam: 'Doble 12 MP', screen: '6,1" Super Retina', colors: [{ n: 'Azul', hex: '#a7c1d9' }, { n: 'Medianoche', hex: '#232a33' }] },
-  { id: '13-s', name: 'iPhone 13', cond: 'Seleccionado', base: 419, caps: [128], battery: 85, grade: 'A', chip: 'A15', cam: 'Doble 12 MP', screen: '6,1" Super Retina', colors: [{ n: 'Blanco estelar', hex: '#ebe6dc' }, { n: 'Rojo', hex: '#b3202f' }] },
+  { id: '17pm', img: '1678685888221-cda773a3dcdb', name: 'iPhone 17 Pro Max', cond: 'Nuevo', base: 1799, caps: [256, 512, 1024], pro: true, chip: 'A19 Pro', cam: 'Triple 48 MP · zoom 8×', screen: '6,9" ProMotion 120 Hz', colors: [{ n: 'Naranja cósmico', hex: '#d9773c' }, { n: 'Azul profundo', hex: '#2d3a5c' }, { n: 'Plata', hex: '#d9dadc' }], tag: 'Lanzamiento' },
+  { id: '17p', img: '1727093493864-0bcbd16c7e6d', name: 'iPhone 17 Pro', cond: 'Nuevo', base: 1599, caps: [256, 512, 1024], pro: true, chip: 'A19 Pro', cam: 'Triple 48 MP · zoom 8×', screen: '6,3" ProMotion 120 Hz', colors: [{ n: 'Azul profundo', hex: '#2d3a5c' }, { n: 'Naranja cósmico', hex: '#d9773c' }, { n: 'Plata', hex: '#d9dadc' }] },
+  { id: '17', img: '1591337676887-a217a6970a8a', name: 'iPhone 17', cond: 'Nuevo', base: 1199, caps: [256, 512], chip: 'A19', cam: 'Doble 48 MP', screen: '6,3" ProMotion 120 Hz', colors: [{ n: 'Lavanda', hex: '#b9a7d6' }, { n: 'Salvia', hex: '#a9b79a' }, { n: 'Negro', hex: '#2a2a2c' }, { n: 'Blanco', hex: '#ececec' }], tag: 'Más vendido' },
+  { id: '16', img: '1603891128711-11b4b03bb138', name: 'iPhone 16', cond: 'Nuevo', base: 949, caps: [128, 256], chip: 'A18', cam: 'Doble 48 MP', screen: '6,1" Super Retina', colors: [{ n: 'Ultramar', hex: '#5a6fd6' }, { n: 'Verde azulado', hex: '#7fb3ad' }, { n: 'Rosa', hex: '#f0b8c8' }, { n: 'Negro', hex: '#2a2a2c' }] },
+  { id: '16p-s', img: '1592750475338-74b7b21085ab', name: 'iPhone 16 Pro', cond: 'Seleccionado', base: 1049, caps: [128, 256], pro: true, battery: 94, grade: 'A+', chip: 'A18 Pro', cam: 'Triple 48 MP · zoom 5×', screen: '6,3" ProMotion', colors: [{ n: 'Titanio desierto', hex: '#bfa58a' }, { n: 'Titanio negro', hex: '#3b3b3d' }] },
+  { id: '15p-s', img: '1589492477829-5e65395b66cc', name: 'iPhone 15 Pro', cond: 'Seleccionado', base: 799, caps: [128, 256], pro: true, battery: 89, grade: 'A+', chip: 'A17 Pro', cam: 'Triple 48 MP · zoom 3×', screen: '6,1" ProMotion', colors: [{ n: 'Titanio natural', hex: '#a8a29a' }, { n: 'Titanio azul', hex: '#3e4a5e' }], tag: 'Oportunidad' },
+  { id: '15-s', img: '1616348436168-de43ad0db179', name: 'iPhone 15', cond: 'Seleccionado', base: 629, caps: [128, 256], battery: 91, grade: 'A', chip: 'A16', cam: 'Doble 48 MP', screen: '6,1" Super Retina', colors: [{ n: 'Rosa', hex: '#f2c9d4' }, { n: 'Negro', hex: '#2f3133' }] },
+  { id: '14-s', img: '1580910051074-3eb694886505', name: 'iPhone 14', cond: 'Seleccionado', base: 499, caps: [128, 256], battery: 87, grade: 'A', chip: 'A15', cam: 'Doble 12 MP', screen: '6,1" Super Retina', colors: [{ n: 'Azul', hex: '#a7c1d9' }, { n: 'Medianoche', hex: '#232a33' }] },
+  { id: '13-s', img: '1605236453806-6ff36851218e', name: 'iPhone 13', cond: 'Seleccionado', base: 419, caps: [128], battery: 85, grade: 'A', chip: 'A15', cam: 'Doble 12 MP', screen: '6,1" Super Retina', colors: [{ n: 'Blanco estelar', hex: '#ebe6dc' }, { n: 'Rojo', hex: '#b3202f' }] },
 ]
 const capAdd = (c: number) => (c === 128 ? 0 : c === 256 ? 100 : c === 512 ? 250 : 450)
 const capLabel = (c: number) => (c >= 1024 ? '1 TB' : `${c} GB`)
@@ -117,7 +117,7 @@ export default function IPhones() {
                 <span className={cx('rounded-full px-2 py-0.5 font-(family-name:--fm) text-[10px] font-semibold uppercase')} style={m.cond === 'Nuevo' ? { background: `${INDIGO}26`, color: INDIGO } : { background: `${MINT}1f`, color: MINT }}>{m.cond === 'Nuevo' ? 'Nuevo sellado' : `Seleccionado ${m.grade}`}</span>
                 {m.tag && <span className="text-[10.5px] font-bold text-amber-300">{m.tag}</span>}
               </div>
-              <div className="my-4 flex justify-center transition duration-500 group-hover:scale-105"><Phone hex={m.colors[0].hex} pro={m.pro} size={64} /></div>
+              <SmartImg src={img(m.img, 400, 400)} alt={m.name} className="my-3 aspect-square w-full rounded-2xl transition duration-500 group-hover:scale-[1.03]" fallback={`radial-gradient(circle at 50% 40%, ${m.colors[0].hex}44, ${CARD} 70%)`} fallbackContent={<Phone hex={m.colors[0].hex} pro={m.pro} size={64} />} />
               <div className="text-[17px] font-extrabold leading-tight">{m.name}</div>
               <div className="mt-1 flex gap-1">{m.colors.map((c) => <span key={c.n} className="h-3 w-3 rounded-full ring-1 ring-white/20" style={{ background: c.hex }} />)}</div>
               {m.battery && <div className="mt-1.5 flex items-center gap-1 font-(family-name:--fm) text-[11px]" style={{ color: MINT }}><BatteryFull className="h-3.5 w-3.5" /> Batería {m.battery}%</div>}
@@ -186,8 +186,9 @@ function ModelSheet({ m, fmt, onClose, onAdd }: { m: Model | null; fmt: (n: numb
     <Sheet open onClose={onClose} side="right" className="bg-[#0d0f1a]" label={m.name}>
       <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Urbanist, sans-serif', color: TXT }}>
         <div className="min-h-0 flex-1 overflow-y-auto">
-          <div className="relative grid place-items-center py-8" style={{ background: `radial-gradient(circle at 50% 40%, ${m.colors[color].hex}55, transparent 65%)` }}>
-            <div key={color} className="animate-pop"><Phone hex={m.colors[color].hex} pro={m.pro} size={110} /></div>
+          <div className="relative">
+            <SmartImg src={img(m.img, 800, 600)} alt={m.name} className="h-64 w-full" eager fallback={`radial-gradient(circle at 50% 40%, ${m.colors[color].hex}55, ${BG} 65%)`} fallbackContent={<Phone hex={m.colors[color].hex} pro={m.pro} size={100} />} />
+            <div key={color} className="animate-pop absolute bottom-3 left-3 flex items-center gap-2 rounded-full px-3 py-1.5 text-[12px] font-semibold backdrop-blur" style={{ background: `${BG}cc` }}><span className="h-3.5 w-3.5 rounded-full ring-1 ring-white/30" style={{ background: m.colors[color].hex }} />{m.colors[color].n}</div>
             <button onClick={onClose} className="absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-full" style={{ background: CARD }} aria-label="Cerrar"><X className="h-5 w-5" /></button>
           </div>
           <div className="p-5">

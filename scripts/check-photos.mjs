@@ -1,9 +1,10 @@
 // Verifica que TODAS las fotos del sitio carguen. Si alguna falla, termina con error
 // y la publicación se cancela: no se puede publicar una tienda con fotos rotas.
-import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 const ID = /\b(\d{10,13}-[0-9a-f]{12})\b/g
+const LOCAL = /['"`](fotos\/[\w./-]+\.(?:jpe?g|png|webp))['"`]/g
 const files = []
 const walk = (dir) => {
   for (const f of readdirSync(dir)) {
@@ -24,6 +25,21 @@ for (const f of files) {
     }
   })
 }
+
+// Fotos propias (public/fotos/…): tienen que existir y ser imágenes reales.
+const localBroken = []
+const localSeen = new Set()
+for (const f of files) {
+  for (const m of readFileSync(f, 'utf8').matchAll(LOCAL)) {
+    const rel = m[1]
+    if (localSeen.has(rel)) continue
+    localSeen.add(rel)
+    const file = join('public', rel)
+    const ok = existsSync(file) && statSync(file).size > 4000 && [0xff, 0x89, 0x52].includes(readFileSync(file)[0])
+    if (!ok) localBroken.push(`${rel} (${f})`)
+  }
+}
+console.log(`Fotos propias: ${localSeen.size}`)
 
 const ids = [...where.keys()]
 console.log(`Verificando ${ids.length} fotos…`)
@@ -49,9 +65,13 @@ async function worker() {
 }
 await Promise.all(Array.from({ length: 8 }, worker))
 
+if (localBroken.length) {
+  console.error(`\n${localBroken.length} foto(s) propias faltan o están vacías:`)
+  for (const l of localBroken) console.error(`  ${l}`)
+}
 if (broken.length) {
   console.error(`\n${broken.length} foto(s) no cargan:`)
   for (const id of broken) console.error(`  ${id}  →  ${where.get(id).join(', ')}`)
-  process.exit(1)
 }
+if (broken.length || localBroken.length) process.exit(1)
 console.log('Todas las fotos cargan.')
