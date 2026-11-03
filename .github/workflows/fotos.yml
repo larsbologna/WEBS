@@ -28,12 +28,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: test -f scripts/unsplash-guesses.txt && node scripts/probe-unsplash.mjs || echo "sin ids"
       - run: test -f scripts/photo-queries.json && node scripts/fetch-candidates.mjs || echo "nada que buscar"
       - run: |
-          if [ -n "$(git status --porcelain scripts/candidates)" ]; then
+          if [ -n "$(git status --porcelain scripts/candidates scripts/probe)" ]; then
             git config user.name "github-actions"
             git config user.email "github-actions@users.noreply.github.com"
-            git add scripts/candidates
+            git add scripts/candidates scripts/probe
             git commit -m "Fotos candidatas"
             git push
           fi
