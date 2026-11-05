@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Bike, Leaf, Minus, Plus, Search, ShoppingBasket, Store, Trash2, X, Timer, Scale, Check, Package } from 'lucide-react'
-import { DemoShell, Reveal, Sheet, SmartImg, Tip, WhatsAppSim, toast } from '../../shared/ui'
-import { useCart, orderText, formatQty } from '../../shared/useCart'
+import { Bike, Leaf, Minus, Plus, Search, ShoppingBasket, Trash2, X, Timer, Scale, Check, Package } from 'lucide-react'
+import { DemoShell, Reveal, Sheet, SmartImg, Tip, toast } from '../../shared/ui'
+import { useCart, formatQty } from '../../shared/useCart'
+import { WhatsAppOrderButton } from '../../shared/whatsapp'
 import { cx, img, money } from '../../shared/format'
 
 const BIZ = 'Natural Market'
@@ -257,87 +258,43 @@ function WeightSheet({ p, onClose, onSet, current }: { p: Prod | null; onClose: 
 }
 
 function CartSheet({ open, onClose, cart }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart> }) {
-  const [mode, setMode] = useState<'retiro' | 'envio'>('retiro')
-  const [name, setName] = useState('')
-  const [addr, setAddr] = useState('')
-  const [prep, setPrep] = useState(false)
-  const [prepStep, setPrepStep] = useState(0)
-  const [wa, setWa] = useState(false)
-  const fee = mode === 'envio' && cart.total < 25000 ? 1800 : 0
-  const valid = name.trim().length > 1 && (mode === 'retiro' || addr.trim().length > 3)
-  const start = () => {
-    setPrep(true); setPrepStep(0)
-    ;[1, 2, 3].forEach((s) => setTimeout(() => setPrepStep(s), s * 900))
-  }
   return (
-    <>
-      <Sheet open={open} onClose={() => { onClose(); setPrep(false) }} side="right" className="bg-[#f4efe3]" label="Mi pedido">
-        <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Nunito, sans-serif', color: '#26301f' }}>
-          <div className="flex items-center justify-between px-5 py-4">
-            <div className="text-2xl font-black" style={{ color: G }}>Mi pedido</div>
-            <button onClick={() => { onClose(); setPrep(false) }} className="grid h-10 w-10 place-items-center rounded-full bg-white" aria-label="Cerrar"><X className="h-5 w-5" /></button>
-          </div>
-          {prep ? (
-            <div className="flex-1 overflow-y-auto p-6">
-              <div className="rounded-3xl bg-white p-6 text-center">
-                <div className="text-5xl">{prepStep < 3 ? '⚖️' : '🛍️'}</div>
-                <div className="mt-3 text-xl font-black">{prepStep < 3 ? 'Simulando tu pedido…' : '¡Pedido listo para enviar!'}</div>
-                <ul className="mx-auto mt-5 max-w-xs space-y-3 text-left text-[15px]">
-                  {['Pedido recibido', 'Pesando y fraccionando', 'Embolsado en kraft'].map((t, i) => (
-                    <li key={t} className={cx('flex items-center gap-3 transition-opacity duration-500', prepStep > i ? 'opacity-100' : 'opacity-30')}>
-                      <span className="grid h-7 w-7 place-items-center rounded-full text-white" style={{ background: prepStep > i ? G : '#0002' }}><Check className="h-4 w-4" /></span>{t}
-                    </li>
-                  ))}
-                </ul>
-                {prepStep >= 3 && (
-                  <div className="animate-fade-up mt-6 space-y-2">
-                    <button onClick={() => setWa(true)} className="w-full rounded-full bg-[#25d366] py-3.5 font-extrabold text-white">Enviar pedido por WhatsApp</button>
-                    <button onClick={() => setPrep(false)} className="w-full py-2 text-sm font-bold underline">Volver al pedido</button>
-                  </div>
-                )}
-              </div>
-              <p className="mt-3 text-center text-[12px] text-black/45">Demostración: muestra al cliente cómo avanza su pedido.</p>
-            </div>
-          ) : cart.lines.length === 0 ? (
-            <div className="grid flex-1 place-items-center p-8 text-center"><div><div className="text-5xl">🧺</div><p className="mt-3 font-extrabold">Tu canasta está vacía</p><button onClick={onClose} className="mt-4 rounded-full px-6 py-3 text-sm font-extrabold text-white" style={{ background: G }}>Ver productos</button></div></div>
-          ) : (
-            <>
-              <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 pb-5">
-                <ul className="divide-y divide-black/5 rounded-3xl bg-white px-4">
-                  {cart.lines.map((l) => (
-                    <li key={l.key} className="flex items-center gap-3 py-3">
-                      <div className="min-w-0 flex-1">
-                        <div className="truncate font-extrabold">{l.name}</div>
-                        <div className="text-[12px] text-black/50">{l.unit === 'kg' ? `${money(l.price)}/kg` : l.detail}</div>
-                        <div className="font-bold" style={{ color: G }}>{money(l.price * l.qty)}</div>
-                      </div>
-                      <div className="flex items-center rounded-full" style={{ background: KRAFT }}>
-                        <button onClick={() => cart.inc(l.key, -1)} className="grid h-8 w-8 place-items-center" aria-label="Restar">{l.qty <= (l.step ?? 1) ? <Trash2 className="h-3.5 w-3.5" /> : <Minus className="h-3.5 w-3.5" />}</button>
-                        <span className="min-w-12 text-center text-[13px] font-extrabold">{l.unit === 'kg' ? formatQty(l.qty, 'kg') : l.qty}</span>
-                        <button onClick={() => cart.inc(l.key, 1)} className="grid h-8 w-8 place-items-center" aria-label="Sumar"><Plus className="h-3.5 w-3.5" /></button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <div className="grid grid-cols-2 gap-2">
-                  {(['retiro', 'envio'] as const).map((m) => <button key={m} onClick={() => setMode(m)} className={cx('flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-extrabold ring-1', mode === m ? 'text-white ring-transparent' : 'bg-white ring-black/10')} style={mode === m ? { background: G } : undefined}>{m === 'retiro' ? <><Store className="h-4 w-4" /> Retiro</> : <><Bike className="h-4 w-4" /> Envío</>}</button>)}
-                </div>
-                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Tu nombre" className="w-full rounded-2xl bg-white px-4 py-3.5 outline-none ring-1 ring-black/5 focus:ring-[#2f4a2b]" />
-                {mode === 'envio' && <input value={addr} onChange={(e) => setAddr(e.target.value)} placeholder="Dirección" className="w-full rounded-2xl bg-white px-4 py-3.5 outline-none ring-1 ring-black/5 focus:ring-[#2f4a2b]" />}
-              </div>
-              <div className="border-t border-black/5 bg-white p-5" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
-                {mode === 'envio' && <div className="flex justify-between text-sm"><span>Envío</span><span>{fee ? money(fee) : 'Gratis'}</span></div>}
-                <div className="flex justify-between text-xl font-black"><span>Total aprox.</span><span>{money(cart.total + fee)}</span></div>
-                <p className="text-[11px] text-black/45">El total final puede variar levemente según el pesaje.</p>
-                <button disabled={!valid} onClick={start} className="mt-3 w-full rounded-full py-4 font-extrabold text-white transition disabled:opacity-35" style={{ background: OR }}>{valid ? 'Confirmar pedido' : `Completá tu nombre${mode === 'envio' ? ' y dirección' : ''}`}</button>
-              </div>
-            </>
-          )}
+    <Sheet open={open} onClose={onClose} side="right" className="bg-[#f4efe3]" label="Mi pedido">
+      <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Nunito, sans-serif', color: '#26301f' }}>
+        <div className="flex items-center justify-between px-5 py-4">
+          <div className="text-2xl font-black" style={{ color: G }}>Mi pedido</div>
+          <button onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full bg-white" aria-label="Cerrar"><X className="h-5 w-5" /></button>
         </div>
-      </Sheet>
-      <WhatsAppSim open={wa} onClose={() => setWa(false)} business={BIZ}
-        message={orderText(BIZ, cart.lines, cart.total + fee, ['', `👤 ${name}`, mode === 'retiro' ? '🏪 Retiro en el local' : `🛵 Envío a: ${addr}`])}
-        onSent={() => setTimeout(() => { cart.clear(); setPrep(false); onClose() }, 500)} />
-    </>
+        {cart.lines.length === 0 ? (
+          <div className="grid flex-1 place-items-center p-8 text-center"><div><div className="text-5xl">🧺</div><p className="mt-3 font-extrabold">Tu canasta está vacía</p><button onClick={onClose} className="mt-4 rounded-full px-6 py-3 text-sm font-extrabold text-white" style={{ background: G }}>Ver productos</button></div></div>
+        ) : (
+          <>
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5">
+              <ul className="divide-y divide-black/5 rounded-3xl bg-white px-4">
+                {cart.lines.map((l) => (
+                  <li key={l.key} className="flex items-center gap-3 py-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate font-extrabold">{l.name}</div>
+                      <div className="text-[12px] text-black/50">{l.unit === 'kg' ? `${money(l.price)}/kg` : l.detail}</div>
+                      <div className="font-bold" style={{ color: G }}>{money(l.price * l.qty)}</div>
+                    </div>
+                    <div className="flex items-center rounded-full" style={{ background: KRAFT }}>
+                      <button onClick={() => cart.inc(l.key, -1)} className="grid h-8 w-8 place-items-center" aria-label="Restar">{l.qty <= (l.step ?? 1) ? <Trash2 className="h-3.5 w-3.5" /> : <Minus className="h-3.5 w-3.5" />}</button>
+                      <span className="min-w-12 text-center text-[13px] font-extrabold">{l.unit === 'kg' ? formatQty(l.qty, 'kg') : l.qty}</span>
+                      <button onClick={() => cart.inc(l.key, 1)} className="grid h-8 w-8 place-items-center" aria-label="Sumar"><Plus className="h-3.5 w-3.5" /></button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="border-t border-black/5 bg-white p-5" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
+              <div className="flex justify-between text-xl font-black"><span>Total aprox.</span><span>{money(cart.total)}</span></div>
+              <p className="mb-3 text-[11px] text-black/45">El total final puede variar levemente según el pesaje.</p>
+              <WhatsAppOrderButton slug="dietetica" business={BIZ} lines={cart.lines} total={cart.total} />
+            </div>
+          </>
+        )}
+      </div>
+    </Sheet>
   )
 }

@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
-import { ArrowLeftRight, BatteryFull, Check, ChevronRight, Cpu, Camera, ShieldCheck, ShoppingBag, Smartphone, Sparkles, Trash2, Truck, X, BadgeCheck, Minus, Plus, Store, Ticket } from 'lucide-react'
-import { DemoShell, Reveal, Sheet, SmartImg, Tip, WhatsAppSim, toast } from '../../shared/ui'
+import { ArrowLeftRight, BatteryFull, Check, ChevronRight, Cpu, Camera, ShieldCheck, ShoppingBag, Smartphone, Sparkles, Trash2, X, BadgeCheck, Minus, Plus, Ticket } from 'lucide-react'
+import { DemoShell, Reveal, Sheet, SmartImg, Tip, toast } from '../../shared/ui'
 import { useCart } from '../../shared/useCart'
+import { WhatsAppOrderButton } from '../../shared/whatsapp'
 import { safeRead, safeWrite } from '../../shared/store'
 import { cx, img } from '../../shared/format'
 
@@ -218,7 +219,7 @@ function ModelSheet({ m, fmt, onClose, onAdd }: { m: Model | null; fmt: (n: numb
                   <span className="flex-1">{a.n}</span><span className="font-(family-name:--fm) text-white/60">+{fmt(a.p)}</span>
                 </button>) })}
             </div>
-            <div className="mt-4 rounded-2xl p-3 text-[13px] text-white/60" style={{ background: CARD }}>En pesos: <b className="text-white">$ {((price + accTotal) * RATE).toLocaleString('es-AR')}</b> · o 6 cuotas fijas de $ {Math.round(((price + accTotal) * RATE * 1.12) / 6).toLocaleString('es-AR')} con tarjeta</div>
+            <div className="mt-4 rounded-2xl p-3 text-[13px] text-white/60" style={{ background: CARD }}>En pesos: <b className="text-white">$ {((price + accTotal) * RATE).toLocaleString('es-AR')}</b></div>
           </div>
         </div>
         <div className="border-t p-4" style={{ borderColor: LINE, paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
@@ -259,80 +260,44 @@ function TradeSheet({ open, onClose, onApply, fmt }: { open: boolean; onClose: (
 }
 
 function CartSheet({ open, onClose, cart, fmt, credit, onClearCredit, onTrade }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart>; fmt: (n: number) => string; credit: { n: string; v: number } | null; onClearCredit: () => void; onTrade: () => void }) {
-  const [step, setStep] = useState<'cart' | 'reserve' | 'done'>('cart')
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [mode, setMode] = useState<'local' | 'envio'>('local')
-  const [code, setCode] = useState('')
-  const [wa, setWa] = useState(false)
-  const [snapshot, setSnapshot] = useState('')
   const hasPhone = cart.lines.some((l) => !l.key.startsWith('acc'))
   const cred = credit && hasPhone ? Math.min(credit.v, cart.total) : 0
   const total = cart.total - cred
-  const ok = name.trim().length > 1 && phone.replace(/\D/g, '').length >= 8
-  const close = () => { onClose(); if (step === 'done') setStep('cart') }
+  const text = `¡Hola ${BIZ}! Quiero consultar por este pedido:\n\n${cart.lines.map((l) => `• ${l.qty > 1 ? `${l.qty}x ` : ''}${l.name}${l.detail ? ` (${l.detail})` : ''} — ${fmt(l.price * l.qty)}`).join('\n')}${cred ? `\n• Plan canje (${credit!.n}): −${fmt(cred)}` : ''}\n\n*Total: ${fmt(total)}*`
   return (
-    <>
-      <Sheet open={open} onClose={close} side="right" className="bg-[#0d0f1a]" label="Carrito">
-        <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Urbanist, sans-serif', color: TXT }}>
-          <div className="flex items-center justify-between border-b p-4" style={{ borderColor: LINE }}><div className="text-xl font-black">{step === 'done' ? 'Reserva confirmada' : step === 'reserve' ? 'Reservá tu equipo' : 'Tu carrito'}</div><button onClick={close} aria-label="Cerrar"><X className="h-6 w-6" /></button></div>
-          {step === 'done' ? (
-            <div className="flex-1 overflow-y-auto p-6 text-center">
-              <div className="animate-pop mx-auto grid h-20 w-20 place-items-center rounded-full" style={{ background: MINT, color: BG }}><Check className="h-10 w-10" /></div>
-              <div className="mt-4 text-2xl font-black">¡Listo, {name.split(' ')[0]}!</div>
-              <p className="text-white/60">Separamos tu equipo por 48 h.</p>
-              <div className="mt-5 rounded-2xl p-5" style={{ background: CARD }}><div className="text-[12px] uppercase tracking-wider text-white/50">Código de reserva</div><div className="mt-1 font-(family-name:--fm) text-3xl font-semibold" style={{ color: INDIGO }}>{code}</div><div className="mt-2 text-[13px] text-white/60">{mode === 'local' ? 'Retirá en Calle 14 N° 4555, local 3. Traé tu usado si usaste plan canje.' : 'Te lo llevamos en el día con un asesor que verifica tu usado.'}</div></div>
-              <button onClick={() => setWa(true)} className="mt-4 w-full rounded-full bg-[#25d366] py-3.5 font-extrabold text-white">Ver confirmación por WhatsApp</button>
-              <p className="mt-3 text-[12px] text-white/40">Demostración: no se cobró ninguna seña.</p>
+    <Sheet open={open} onClose={onClose} side="right" className="bg-[#0d0f1a]" label="Carrito">
+      <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Urbanist, sans-serif', color: TXT }}>
+        <div className="flex items-center justify-between border-b p-4" style={{ borderColor: LINE }}><div className="text-xl font-black">Tu carrito</div><button onClick={onClose} aria-label="Cerrar"><X className="h-6 w-6" /></button></div>
+        {cart.lines.length === 0 ? (
+          <div className="grid flex-1 place-items-center p-8 text-center"><div><Smartphone className="mx-auto h-10 w-10 text-white/25" /><p className="mt-3 font-bold">Tu carrito está vacío</p><button onClick={onClose} className="mt-4 rounded-full px-6 py-3 text-sm font-bold" style={{ background: INDIGO, color: BG }}>Ver modelos</button></div></div>
+        ) : (
+          <>
+            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
+              <ul className="space-y-2">
+                {cart.lines.map((l) => (
+                  <li key={l.key} className="flex items-center gap-3 rounded-2xl p-3" style={{ background: CARD }}>
+                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl" style={{ background: LINE }}>{l.key.startsWith('acc') ? <ShieldCheck className="h-5 w-5" style={{ color: MINT }} /> : <Smartphone className="h-5 w-5" style={{ color: INDIGO }} />}</div>
+                    <div className="min-w-0 flex-1"><div className="truncate font-bold">{l.name}</div><div className="truncate text-[12px] text-white/50">{l.detail}</div><div className="font-(family-name:--fm) text-[13px]">{fmt(l.price * l.qty)}</div></div>
+                    <div className="flex items-center rounded-full" style={{ background: LINE }}>
+                      <button onClick={() => cart.inc(l.key, -1)} className="grid h-8 w-8 place-items-center" aria-label="Restar">{l.qty === 1 ? <Trash2 className="h-3.5 w-3.5" /> : <Minus className="h-3.5 w-3.5" />}</button>
+                      <span className="w-4 text-center text-sm font-bold">{l.qty}</span>
+                      <button onClick={() => cart.inc(l.key, 1)} className="grid h-8 w-8 place-items-center" aria-label="Sumar"><Plus className="h-3.5 w-3.5" /></button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              {credit && hasPhone ? (
+                <div className="flex items-center gap-3 rounded-2xl p-3" style={{ background: `${MINT}14` }}><ArrowLeftRight className="h-5 w-5" style={{ color: MINT }} /><div className="flex-1 text-sm"><b>Plan canje:</b> tu {credit.n}</div><span className="font-(family-name:--fm) text-sm" style={{ color: MINT }}>−{fmt(cred)}</span><button onClick={onClearCredit} aria-label="Quitar canje"><X className="h-4 w-4 text-white/50" /></button></div>
+              ) : hasPhone && <button onClick={onTrade} className="flex w-full items-center gap-3 rounded-2xl border border-dashed p-3 text-left text-sm" style={{ borderColor: LINE }}><ArrowLeftRight className="h-5 w-5" style={{ color: INDIGO }} /><span className="flex-1">¿Tenés un iPhone para entregar? <b>Cotizalo</b></span><ChevronRight className="h-4 w-4" /></button>}
             </div>
-          ) : cart.lines.length === 0 ? (
-            <div className="grid flex-1 place-items-center p-8 text-center"><div><Smartphone className="mx-auto h-10 w-10 text-white/25" /><p className="mt-3 font-bold">Tu carrito está vacío</p><button onClick={close} className="mt-4 rounded-full px-6 py-3 text-sm font-bold" style={{ background: INDIGO, color: BG }}>Ver modelos</button></div></div>
-          ) : (
-            <>
-              <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
-                {step === 'cart' ? (
-                  <>
-                    <ul className="space-y-2">
-                      {cart.lines.map((l) => (
-                        <li key={l.key} className="flex items-center gap-3 rounded-2xl p-3" style={{ background: CARD }}>
-                          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl" style={{ background: LINE }}>{l.key.startsWith('acc') ? <ShieldCheck className="h-5 w-5" style={{ color: MINT }} /> : <Smartphone className="h-5 w-5" style={{ color: INDIGO }} />}</div>
-                          <div className="min-w-0 flex-1"><div className="truncate font-bold">{l.name}</div><div className="truncate text-[12px] text-white/50">{l.detail}</div><div className="font-(family-name:--fm) text-[13px]">{fmt(l.price * l.qty)}</div></div>
-                          <div className="flex items-center rounded-full" style={{ background: LINE }}>
-                            <button onClick={() => cart.inc(l.key, -1)} className="grid h-8 w-8 place-items-center" aria-label="Restar">{l.qty === 1 ? <Trash2 className="h-3.5 w-3.5" /> : <Minus className="h-3.5 w-3.5" />}</button>
-                            <span className="w-4 text-center text-sm font-bold">{l.qty}</span>
-                            <button onClick={() => cart.inc(l.key, 1)} className="grid h-8 w-8 place-items-center" aria-label="Sumar"><Plus className="h-3.5 w-3.5" /></button>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                    {credit && hasPhone ? (
-                      <div className="flex items-center gap-3 rounded-2xl p-3" style={{ background: `${MINT}14` }}><ArrowLeftRight className="h-5 w-5" style={{ color: MINT }} /><div className="flex-1 text-sm"><b>Plan canje:</b> tu {credit.n}</div><span className="font-(family-name:--fm) text-sm" style={{ color: MINT }}>−{fmt(cred)}</span><button onClick={onClearCredit} aria-label="Quitar canje"><X className="h-4 w-4 text-white/50" /></button></div>
-                    ) : hasPhone && <button onClick={onTrade} className="flex w-full items-center gap-3 rounded-2xl border border-dashed p-3 text-left text-sm" style={{ borderColor: LINE }}><ArrowLeftRight className="h-5 w-5" style={{ color: INDIGO }} /><span className="flex-1">¿Tenés un iPhone para entregar? <b>Cotizalo</b></span><ChevronRight className="h-4 w-4" /></button>}
-                  </>
-                ) : (
-                  <>
-                    <p className="text-[14px] text-white/65">Dejá tus datos y separamos el equipo 48 h. Pagás al retirarlo en efectivo, transferencia o hasta 6 cuotas.</p>
-                    <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nombre y apellido" className="w-full rounded-2xl border bg-transparent px-4 py-3.5 outline-none focus:border-[#818cf8]" style={{ borderColor: LINE }} />
-                    <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="WhatsApp" inputMode="tel" className="w-full rounded-2xl border bg-transparent px-4 py-3.5 outline-none focus:border-[#818cf8]" style={{ borderColor: LINE }} />
-                    <div className="grid grid-cols-2 gap-2">{([['local', 'Retiro en local', Store], ['envio', 'Envío en el día', Truck]] as const).map(([v, t, I]) => <button key={v} onClick={() => setMode(v)} className="flex items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-bold" style={{ borderColor: mode === v ? INDIGO : LINE, background: mode === v ? `${INDIGO}1a` : 'transparent' }}><I className="h-4 w-4" />{t}</button>)}</div>
-                  </>
-                )}
-              </div>
-              <div className="border-t p-4" style={{ borderColor: LINE, paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-                {cred > 0 && <div className="flex justify-between text-sm text-white/60"><span>Subtotal</span><span className="font-(family-name:--fm)">{fmt(cart.total)}</span></div>}
-                <div className="flex justify-between text-xl font-black"><span>Total</span><span className="font-(family-name:--fm)">{fmt(total)}</span></div>
-                <button disabled={step === 'reserve' && !ok} onClick={() => {
-                  if (step === 'cart') return setStep('reserve')
-                  const c = `ORB-${Math.floor(1000 + Math.random() * 8999)}`; setCode(c)
-                  setSnapshot(`¡Hola ${name.split(' ')[0]}! Confirmamos tu reserva ${c} en Órbita Mobile:\n\n${cart.lines.map((l) => `• ${l.name} (${l.detail}) — ${fmt(l.price * l.qty)}`).join('\n')}${cred ? `\n• Plan canje ${credit!.n}: −${fmt(cred)}` : ''}\n\n*Total: ${fmt(total)}*\nTe esperamos dentro de las próximas 48 h.`)
-                  cart.clear(); onClearCredit(); setStep('done')
-                }} className="mt-3 w-full rounded-full py-4 font-extrabold disabled:opacity-30" style={{ background: INDIGO, color: BG }}>{step === 'cart' ? 'Continuar con la reserva' : ok ? 'Reservar sin cargo' : 'Completá tus datos'}</button>
-              </div>
-            </>
-          )}
-        </div>
-      </Sheet>
-      <WhatsAppSim open={wa} onClose={() => setWa(false)} business={BIZ} message={snapshot} />
-    </>
+            <div className="border-t p-4" style={{ borderColor: LINE, paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+              {cred > 0 && <div className="flex justify-between text-sm text-white/60"><span>Subtotal</span><span className="font-(family-name:--fm)">{fmt(cart.total)}</span></div>}
+              <div className="mb-3 flex justify-between text-xl font-black"><span>Total</span><span className="font-(family-name:--fm)">{fmt(total)}</span></div>
+              <WhatsAppOrderButton slug="iphones" business={BIZ} lines={cart.lines} total={total} text={text} />
+            </div>
+          </>
+        )}
+      </div>
+    </Sheet>
   )
 }

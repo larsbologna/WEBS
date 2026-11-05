@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Bone, Calculator, Cat, Check, Dog, Gift, Minus, PawPrint, Plus, Repeat, ShoppingBasket, Store, Trash2, Truck, X, Bath, BedDouble, Sparkles, Heart, Clock } from 'lucide-react'
 import { DemoShell, Reveal, Sheet, SmartImg, Tip, toast } from '../../shared/ui'
 import { useCart } from '../../shared/useCart'
+import { WhatsAppOrderButton } from '../../shared/whatsapp'
 import { safeRead, safeWrite } from '../../shared/store'
 import { cx, img, money } from '../../shared/format'
 
@@ -281,63 +282,37 @@ function CalcSheet({ open, onClose, onPick }: { open: boolean; onClose: () => vo
 }
 
 function CartSheet({ open, onClose, cart }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart> }) {
-  const [step, setStep] = useState(0)
-  const [d, setD] = useState({ name: '', phone: '', mode: 'envio', addr: '', pay: 'Mercado Pago' })
-  const [done, setDone] = useState<null | { n: number; total: number; subs: number }>(null)
   // 2x1 en snacks: se descuenta la unidad más barata de cada par
   const snackUnits = cart.lines.filter((l) => ['s1', 's2', 's3'].some((k) => l.key.startsWith(k))).flatMap((l) => Array.from({ length: l.qty }, () => l.price)).sort((a, b) => a - b)
   const promo = snackUnits.slice(0, Math.floor(snackUnits.length / 2)).reduce((s, x) => s + x, 0)
-  const ship = d.mode === 'envio' && cart.total - promo < FREE ? 2500 : 0
-  const total = cart.total - promo + ship
-  const ok = step === 0 || (d.name.trim().length > 1 && d.phone.replace(/\D/g, '').length >= 8 && (d.mode === 'retiro' || d.addr.trim().length > 3))
-  const close = () => { onClose(); if (done) { setDone(null); setStep(0) } }
-  const late = new Date().getHours() >= 15
+  const total = cart.total - promo
   return (
-    <Sheet open={open} onClose={close} side="right" className="bg-[#fffaf0]" label="Carrito">
+    <Sheet open={open} onClose={onClose} side="right" className="bg-[#fffaf0]" label="Carrito">
       <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Figtree, sans-serif', color: PLUM }}>
-        <div className="flex items-center justify-between p-4"><div className="font-(family-name:--fd) text-2xl font-bold">{done ? '¡Pedido confirmado!' : step === 0 ? 'Tu carrito' : 'Tus datos'}</div><button onClick={close} className="grid h-10 w-10 place-items-center rounded-full bg-white" aria-label="Cerrar"><X className="h-5 w-5" /></button></div>
-        {done ? (
-          <div className="flex-1 overflow-y-auto p-6 text-center">
-            <div className="animate-pop mx-auto grid h-20 w-20 place-items-center rounded-full text-white" style={{ background: CORAL }}><PawPrint className="h-10 w-10" /></div>
-            <p className="mt-4 text-lg font-bold">Pedido #{done.n} · {money(done.total)}</p>
-            <div className="mt-4 rounded-3xl bg-white p-4 text-left text-[14px]">{d.mode === 'envio' ? <>🛵 <b>Llega {late ? 'mañana' : 'hoy'} entre 18 y 20 h</b> a {d.addr}.</> : <>🏪 <b>Retiralo en 30 minutos</b> en Av. Mitre 2290.</>}{done.subs > 0 && <div className="mt-2">🔁 Programaste {done.subs} producto{done.subs > 1 ? 's' : ''}: te avisamos por WhatsApp antes de cada envío.</div>}</div>
-            <p className="mt-3 text-[12px] text-[#2b1747]/45">Demostración: no se realizó ningún cobro.</p>
-            <button onClick={close} className="mt-4 w-full rounded-full py-4 font-bold text-white" style={{ background: PLUM }}>Seguir comprando</button>
-          </div>
-        ) : cart.lines.length === 0 ? (
-          <div className="grid flex-1 place-items-center p-8 text-center"><div><div className="text-5xl">🦴</div><p className="mt-3 font-bold">Tu carrito está vacío</p><button onClick={close} className="mt-4 rounded-full px-6 py-3 text-sm font-bold text-white" style={{ background: CORAL }}>Ver productos</button></div></div>
+        <div className="flex items-center justify-between p-4"><div className="font-(family-name:--fd) text-2xl font-bold">Tu carrito</div><button onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full bg-white" aria-label="Cerrar"><X className="h-5 w-5" /></button></div>
+        {cart.lines.length === 0 ? (
+          <div className="grid flex-1 place-items-center p-8 text-center"><div><div className="text-5xl">🦴</div><p className="mt-3 font-bold">Tu carrito está vacío</p><button onClick={onClose} className="mt-4 rounded-full px-6 py-3 text-sm font-bold text-white" style={{ background: CORAL }}>Ver productos</button></div></div>
         ) : (
           <>
-            <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 pb-4">
-              {step === 0 ? (
-                <ul className="space-y-2">
-                  {cart.lines.map((l) => { const p = P.find((x) => l.key.startsWith(x.id))!; return (
-                    <li key={l.key} className="flex items-center gap-3 rounded-2xl bg-white p-2.5">
-                      <Thumb p={p} className="h-14 w-14 shrink-0 rounded-xl" size={40} />
-                      <div className="min-w-0 flex-1"><div className="truncate text-[14px] font-bold">{l.name}</div><div className="truncate text-[12px] text-[#2b1747]/55">{l.detail}</div><div className="font-bold">{money(l.price * l.qty)}</div></div>
-                      <div className="flex items-center rounded-full" style={{ background: CREAM }}>
-                        <button onClick={() => cart.inc(l.key, -1)} className="grid h-8 w-8 place-items-center" aria-label="Restar">{l.qty === 1 ? <Trash2 className="h-3.5 w-3.5" /> : <Minus className="h-3.5 w-3.5" />}</button>
-                        <span className="w-5 text-center text-sm font-bold">{l.qty}</span>
-                        <button onClick={() => cart.inc(l.key, 1)} className="grid h-8 w-8 place-items-center" aria-label="Sumar"><Plus className="h-3.5 w-3.5" /></button>
-                      </div>
-                    </li>) })}
-                </ul>
-              ) : (
-                <>
-                  <input value={d.name} onChange={(e) => setD({ ...d, name: e.target.value })} placeholder="Tu nombre" className="w-full rounded-2xl bg-white px-4 py-3.5 outline-none ring-2 ring-transparent focus:ring-[#ff6b5b]" />
-                  <input value={d.phone} onChange={(e) => setD({ ...d, phone: e.target.value })} placeholder="WhatsApp" inputMode="tel" className="w-full rounded-2xl bg-white px-4 py-3.5 outline-none ring-2 ring-transparent focus:ring-[#ff6b5b]" />
-                  <div className="grid grid-cols-2 gap-2">{([['envio', `Envío ${late ? 'mañana' : 'hoy'}`, Truck], ['retiro', 'Retiro en 30′', Store]] as const).map(([v, t, I]) => <button key={v} onClick={() => setD({ ...d, mode: v })} className={cx('flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold', d.mode === v ? 'text-white' : 'bg-white')} style={d.mode === v ? { background: PLUM } : undefined}><I className="h-4 w-4" />{t}</button>)}</div>
-                  {d.mode === 'envio' && <input value={d.addr} onChange={(e) => setD({ ...d, addr: e.target.value })} placeholder="Dirección" className="w-full rounded-2xl bg-white px-4 py-3.5 outline-none ring-2 ring-transparent focus:ring-[#ff6b5b]" />}
-                  <div className="flex gap-2">{['Mercado Pago', 'Efectivo', 'Transferencia'].map((x) => <button key={x} onClick={() => setD({ ...d, pay: x })} className={cx('flex-1 rounded-xl py-2.5 text-[12.5px] font-bold', d.pay === x ? 'text-white' : 'bg-white')} style={d.pay === x ? { background: CORAL } : undefined}>{x}</button>)}</div>
-                </>
-              )}
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
+              <ul className="space-y-2">
+                {cart.lines.map((l) => { const p = P.find((x) => l.key.startsWith(x.id))!; return (
+                  <li key={l.key} className="flex items-center gap-3 rounded-2xl bg-white p-2.5">
+                    <Thumb p={p} className="h-14 w-14 shrink-0 rounded-xl" size={40} />
+                    <div className="min-w-0 flex-1"><div className="truncate text-[14px] font-bold">{l.name}</div><div className="truncate text-[12px] text-[#2b1747]/55">{l.detail}</div><div className="font-bold">{money(l.price * l.qty)}</div></div>
+                    <div className="flex items-center rounded-full" style={{ background: CREAM }}>
+                      <button onClick={() => cart.inc(l.key, -1)} className="grid h-8 w-8 place-items-center" aria-label="Restar">{l.qty === 1 ? <Trash2 className="h-3.5 w-3.5" /> : <Minus className="h-3.5 w-3.5" />}</button>
+                      <span className="w-5 text-center text-sm font-bold">{l.qty}</span>
+                      <button onClick={() => cart.inc(l.key, 1)} className="grid h-8 w-8 place-items-center" aria-label="Sumar"><Plus className="h-3.5 w-3.5" /></button>
+                    </div>
+                  </li>) })}
+              </ul>
             </div>
             <div className="border-t border-[#2b1747]/10 bg-white p-4 text-sm" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-              <div className="flex justify-between"><span>Subtotal</span><span>{money(cart.total)}</span></div>
+              {promo > 0 && <div className="flex justify-between"><span>Subtotal</span><span>{money(cart.total)}</span></div>}
               {promo > 0 && <div className="flex justify-between font-bold" style={{ color: CORAL }}><span>2x1 en snacks</span><span>−{money(promo)}</span></div>}
-              <div className="flex justify-between"><span>Envío</span><span>{d.mode === 'retiro' ? 'Sin cargo' : ship ? money(ship) : 'Gratis'}</span></div>
-              <div className="flex justify-between text-xl font-extrabold"><span>Total</span><span>{money(total)}</span></div>
-              <button disabled={!ok} onClick={() => { if (step === 0) setStep(1); else { setDone({ n: 2000 + Math.floor(Math.random() * 7999), total, subs: cart.lines.filter((l) => l.key.includes('-sub')).length }); cart.clear() } }} className="mt-3 w-full rounded-full py-4 font-bold text-white disabled:opacity-35" style={{ background: CORAL }}>{step === 0 ? 'Continuar' : ok ? `Confirmar pedido · ${money(total)}` : 'Completá tus datos'}</button>
+              <div className="mb-3 flex justify-between text-xl font-extrabold"><span>Total</span><span>{money(total)}</span></div>
+              <WhatsAppOrderButton slug="petshop" business="Colita Feliz" lines={cart.lines} total={total} extra={promo > 0 ? [`(incluye 2x1 en snacks: −${money(promo)})`] : []} />
             </div>
           </>
         )}

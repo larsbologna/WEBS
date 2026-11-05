@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Clock, Coffee, Dog, MapPin, Minus, Plus, Plug, ShoppingBag, Trash2, Wifi, X, Sparkles, Heart } from 'lucide-react'
 import { DemoShell, Reveal, Sheet, SmartImg, Tip, toast } from '../../shared/ui'
 import { useCart } from '../../shared/useCart'
+import { WhatsAppOrderButton } from '../../shared/whatsapp'
 import { cx, img, money } from '../../shared/format'
 
 const C = { bg: '#efe6da', ink: '#3b2a20', sage: '#7f8f6e', cream: '#f8f3ec', caramel: '#c7894d' }
@@ -36,14 +37,13 @@ const COMBOS = [
 
 const SIZES = [{ n: 'Chico', p: 0 }, { n: 'Mediano', p: 600 }, { n: 'Grande', p: 1100 }]
 const MILKS = [{ n: 'Entera', p: 0 }, { n: 'Descremada', p: 0 }, { n: 'Avena', p: 700 }, { n: 'Almendras', p: 900 }]
-const PICKUP = ['Lo antes posible (~10 min)', 'En 20 min', 'En 30 min', 'En 45 min']
+const BIZ = 'Moka Café'
 
 export default function Cafeteria() {
   const cart = useCart('cafeteria')
   const [cat, setCat] = useState<Cat>('Cafés')
   const [custom, setCustom] = useState<Item | null>(null)
   const [cartOpen, setCartOpen] = useState(false)
-  const [ticket, setTicket] = useState<null | { name: string; when: string; total: number; n: number; lines: string[] }>(null)
   const [stamps, setStamps] = useState(5)
 
   const quickAdd = (it: Item) => {
@@ -228,8 +228,7 @@ export default function Cafeteria() {
       )}
 
       <CustomSheet item={custom} onClose={() => setCustom(null)} onAdd={(l) => { cart.add(l); toast(`${l.name} sumado`); setCustom(null) }} />
-      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} onConfirm={(t) => { setCartOpen(false); setTicket(t); cart.clear() }} />
-      <Ticket data={ticket} onClose={() => setTicket(null)} />
+      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
     </DemoShell>
   )
 }
@@ -291,14 +290,12 @@ function CustomSheet({ item, onClose, onAdd }: { item: Item | null; onClose: () 
   )
 }
 
-function CartSheet({ open, onClose, cart, onConfirm }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart>; onConfirm: (t: { name: string; when: string; total: number; n: number; lines: string[] }) => void }) {
-  const [when, setWhen] = useState(0)
-  const [name, setName] = useState('')
+function CartSheet({ open, onClose, cart }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart> }) {
   return (
     <Sheet open={open} onClose={onClose} side="right" className="bg-[#efe6da]" label="Pedido para llevar">
       <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: '"DM Sans", sans-serif', color: C.ink }}>
         <div className="flex items-center justify-between px-5 py-4">
-          <div><div className="font-(family-name:--fd) text-2xl font-semibold">Para llevar</div><div className="text-[13px] text-[#3b2a20]/55">Retirás en el mostrador, sin fila</div></div>
+          <div className="font-(family-name:--fd) text-2xl font-semibold">Tu pedido</div>
           <button onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full bg-[#f8f3ec]" aria-label="Cerrar"><X className="h-5 w-5" /></button>
         </div>
         {cart.lines.length === 0 ? (
@@ -308,7 +305,7 @@ function CartSheet({ open, onClose, cart, onConfirm }: { open: boolean; onClose:
           </div>
         ) : (
           <>
-            <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-5 pb-5">
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5">
               <ul className="divide-y divide-[#3b2a20]/10 rounded-3xl bg-[#f8f3ec] px-4">
                 {cart.lines.map((l) => (
                   <li key={l.key} className="flex items-center gap-3 py-3">
@@ -321,54 +318,14 @@ function CartSheet({ open, onClose, cart, onConfirm }: { open: boolean; onClose:
                   </li>
                 ))}
               </ul>
-              <div>
-                <div className="text-sm font-semibold">¿Cuándo pasás a retirarlo?</div>
-                <div className="mt-2 grid grid-cols-2 gap-2">
-                  {PICKUP.map((p, i) => (
-                    <button key={p} onClick={() => setWhen(i)} className={cx('rounded-2xl px-3 py-3 text-left text-[13px] font-semibold ring-1 transition', when === i ? 'bg-[#3b2a20] text-white ring-[#3b2a20]' : 'bg-[#f8f3ec] ring-transparent')}>{p}</button>
-                  ))}
-                </div>
-              </div>
-              <input value={name} onChange={(e) => setName(e.target.value)} placeholder="¿A nombre de quién?" className="w-full rounded-2xl bg-[#f8f3ec] px-4 py-3.5 outline-none ring-1 ring-transparent focus:ring-[#c7894d]" />
             </div>
             <div className="border-t border-[#3b2a20]/10 bg-[#f8f3ec] p-5" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
               <div className="flex justify-between font-(family-name:--fd) text-2xl font-semibold"><span>Total</span><span>{money(cart.total)}</span></div>
-              <button disabled={name.trim().length < 2}
-                onClick={() => onConfirm({ name, when: PICKUP[when], total: cart.total, n: 100 + Math.floor(Math.random() * 899), lines: cart.lines.map((l) => `${l.qty}× ${l.name}${l.detail ? ` (${l.detail})` : ''}`) })}
-                className="mt-3 w-full rounded-full bg-[#c7894d] py-3.5 font-semibold text-white transition active:scale-[.98] disabled:opacity-40">
-                {name.trim().length < 2 ? 'Ingresá tu nombre' : 'Confirmar y pagar al retirar'}
-              </button>
+              <div className="mt-3"><WhatsAppOrderButton slug="cafeteria" business={BIZ} lines={cart.lines} total={cart.total} /></div>
             </div>
           </>
         )}
       </div>
-    </Sheet>
-  )
-}
-
-function Ticket({ data, onClose }: { data: null | { name: string; when: string; total: number; n: number; lines: string[] }; onClose: () => void }) {
-  return (
-    <Sheet open={!!data} onClose={onClose} side="center" className="bg-transparent shadow-none" label="Ticket de retiro">
-      {data && (
-        <div className="overflow-y-auto" style={{ fontFamily: '"DM Sans", sans-serif', color: C.ink }}>
-          <div className="rounded-[28px] bg-[#f8f3ec] p-6 text-center">
-            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#7f8f6e] text-white"><Coffee className="h-7 w-7" /></div>
-            <div className="mt-3 font-(family-name:--fd) text-2xl font-semibold">¡Ya lo estamos preparando!</div>
-            <p className="text-sm text-[#3b2a20]/60">{data.name}, mostrá este código en el mostrador.</p>
-            <div className="mt-5 font-(family-name:--fd) text-6xl font-semibold tracking-tight text-[#c7894d]">#{data.n}</div>
-            <div className="mx-auto mt-4 grid w-32 grid-cols-8 gap-0.5" aria-hidden>
-              {Array.from({ length: 64 }).map((_, i) => <div key={i} className={cx('aspect-square', ((i * 7 + data.n) % 3 === 0 || i % 9 === 0) ? 'bg-[#3b2a20]' : 'bg-transparent')} />)}
-            </div>
-          </div>
-          <div className="relative -mt-px border-t-2 border-dashed border-[#3b2a20]/15 bg-[#f8f3ec] px-6 pb-6 pt-4">
-            <div className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-black/50" /><div className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-black/50" />
-            <ul className="space-y-1 text-[14px]">{data.lines.map((l) => <li key={l}>{l}</li>)}</ul>
-            <div className="mt-3 flex justify-between border-t border-[#3b2a20]/10 pt-3 font-semibold"><span>Retiro: {data.when}</span><span>{money(data.total)}</span></div>
-            <p className="mt-3 text-[12px] text-[#3b2a20]/50">Demostración: en la web real el pedido llega al local al instante.</p>
-            <button onClick={onClose} className="mt-4 w-full rounded-full bg-[#3b2a20] py-3 font-semibold text-white">Listo</button>
-          </div>
-        </div>
-      )}
     </Sheet>
   )
 }

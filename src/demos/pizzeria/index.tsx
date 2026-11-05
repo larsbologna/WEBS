@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Bike, Check, ChefHat, Clock, Flame, Minus, Plus, ShoppingBasket, Store, Trash2, X, Timer, PartyPopper, MessageCircle } from 'lucide-react'
-import { DemoShell, Reveal, Sheet, SmartImg, Tip, WhatsAppSim, toast } from '../../shared/ui'
-import { useCart, orderText } from '../../shared/useCart'
+import { Bike, Check, ChefHat, Clock, Flame, Minus, Plus, ShoppingBasket, Trash2, X, Timer } from 'lucide-react'
+import { DemoShell, Reveal, Sheet, SmartImg, Tip, toast } from '../../shared/ui'
+import { useCart } from '../../shared/useCart'
+import { WhatsAppOrderButton } from '../../shared/whatsapp'
 import { cx, img, money } from '../../shared/format'
 
 const BIZ = 'Forno Napoli'
@@ -61,7 +62,6 @@ export default function Pizzeria() {
   const [variety, setVariety] = useState<Variety | 'Todas'>('Todas')
   const [builder, setBuilder] = useState<Pizza | null>(null)
   const [cartOpen, setCartOpen] = useState(false)
-  const [tracking, setTracking] = useState<null | { mode: string; total: number }>(null)
   const list = PIZZAS.filter((p) => variety === 'Todas' || p.v === variety)
 
   return (
@@ -228,8 +228,7 @@ export default function Pizzeria() {
       )}
 
       <Builder pizza={builder} onClose={() => setBuilder(null)} onAdd={(line) => { cart.add(line); toast('Pizza agregada al pedido 🍕'); setBuilder(null) }} />
-      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} onConfirm={(t) => { setCartOpen(false); setTracking(t) }} />
-      <Tracking data={tracking} cart={cart} onClose={() => setTracking(null)} />
+      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
     </DemoShell>
   )
 }
@@ -372,10 +371,7 @@ const Label = ({ n, t }: { n: number; t: string }) => (
 )
 
 /* ─────────── Carrito ─────────── */
-function CartSheet({ open, onClose, cart, onConfirm }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart>; onConfirm: (t: { mode: string; total: number }) => void }) {
-  const [mode, setMode] = useState<'delivery' | 'retiro'>('delivery')
-  const [pay, setPay] = useState('Efectivo')
-  const fee = mode === 'delivery' && cart.total < 25000 ? 2200 : 0
+function CartSheet({ open, onClose, cart }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart> }) {
   return (
     <Sheet open={open} onClose={onClose} side="right" className="bg-[#1b1714]" label="Tu pedido">
       <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Rubik, sans-serif', color: '#f5e9d6' }}>
@@ -390,7 +386,7 @@ function CartSheet({ open, onClose, cart, onConfirm }: { open: boolean; onClose:
           </div>
         ) : (
           <>
-            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-5">
+            <div className="min-h-0 flex-1 overflow-y-auto p-5">
               <ul className="space-y-3">
                 {cart.lines.map((l) => (
                   <li key={l.key} className="rounded-2xl bg-white/5 p-3">
@@ -406,83 +402,14 @@ function CartSheet({ open, onClose, cart, onConfirm }: { open: boolean; onClose:
                   </li>
                 ))}
               </ul>
-              <div className="grid grid-cols-2 gap-2">
-                {(['delivery', 'retiro'] as const).map((m) => (
-                  <button key={m} onClick={() => setMode(m)} className={cx('flex flex-col items-center gap-1 rounded-2xl p-3 text-sm font-bold ring-2 transition', mode === m ? 'bg-[#e63922]/15 ring-[#e63922]' : 'bg-white/5 ring-transparent')}>
-                    {m === 'delivery' ? <Bike className="h-5 w-5" /> : <Store className="h-5 w-5" />}
-                    {m === 'delivery' ? 'Delivery · 35′' : 'Retiro · 20′'}
-                  </button>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                {['Efectivo', 'Transferencia', 'Tarjeta'].map((p) => (
-                  <button key={p} onClick={() => setPay(p)} className={cx('flex-1 rounded-xl py-2 text-[13px] font-semibold ring-1', pay === p ? 'bg-[#f5e9d6] text-[#141210] ring-[#f5e9d6]' : 'ring-white/15')}>{p}</button>
-                ))}
-              </div>
             </div>
             <div className="border-t border-white/10 p-5" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
-              <div className="flex justify-between text-sm text-[#f5e9d6]/70"><span>Envío</span><span>{mode === 'retiro' ? 'Sin cargo' : fee ? money(fee) : 'Gratis'}</span></div>
-              <div className="mt-1 flex justify-between font-(family-name:--fd) text-3xl"><span>TOTAL</span><span>{money(cart.total + fee)}</span></div>
-              <button onClick={() => onConfirm({ mode: `${mode === 'delivery' ? 'Delivery' : 'Retiro'} · ${pay}`, total: cart.total + fee })}
-                className="mt-4 w-full rounded-full bg-[#e63922] py-4 font-bold uppercase tracking-wide text-white transition active:scale-[.98]">Confirmar pedido</button>
+              <div className="mb-4 flex justify-between font-(family-name:--fd) text-3xl"><span>TOTAL</span><span>{money(cart.total)}</span></div>
+              <WhatsAppOrderButton slug="pizzeria" business={BIZ} lines={cart.lines} total={cart.total} />
             </div>
           </>
         )}
       </div>
     </Sheet>
-  )
-}
-
-/* ─────────── Seguimiento simulado ─────────── */
-const STEPS = [
-  { t: 'Pedido recibido', d: 'Ya lo vimos en la cocina', i: Check },
-  { t: 'En el horno', d: 'A 480 °C, 90 segundos', i: Flame },
-  { t: 'En camino', d: 'Tu pedido salió del local', i: Bike },
-  { t: '¡Que lo disfrutes!', d: 'Entregado', i: PartyPopper },
-]
-function Tracking({ data, cart, onClose }: { data: null | { mode: string; total: number }; cart: ReturnType<typeof useCart>; onClose: () => void }) {
-  const [step, setStep] = useState(0)
-  const [wa, setWa] = useState(false)
-  const [snapshot, setSnapshot] = useState('')
-  const [num] = useState(() => 1000 + Math.floor(Math.random() * 8999))
-  useEffect(() => {
-    if (!data) return
-    setStep(0)
-    setSnapshot(orderText(BIZ, cart.lines, data.total, ['', `Pedido #${num} · ${data.mode}`]))
-    cart.clear()
-    const ids = [1, 2, 3].map((s) => setTimeout(() => setStep(s), s * 2200))
-    return () => ids.forEach(clearTimeout)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
-  return (
-    <>
-      <Sheet open={!!data} onClose={onClose} side="center" className="bg-[#f5e9d6]" label="Seguimiento del pedido">
-        <div className="p-6 text-[#141210]" style={{ fontFamily: 'Rubik, sans-serif' }}>
-          <div className="text-[12px] font-bold uppercase tracking-widest text-[#e63922]">Pedido #{num}</div>
-          <div className="font-(family-name:--fd) text-4xl uppercase">¡Gracias por tu pedido!</div>
-          <div className="mt-1 text-sm text-[#141210]/60">{data?.mode} · {data && money(data.total)}</div>
-          <ol className="mt-6 space-y-0">
-            {STEPS.map((s, i) => {
-              const done = i <= step
-              return (
-                <li key={s.t} className="flex gap-4">
-                  <div className="flex flex-col items-center">
-                    <div className={cx('grid h-10 w-10 place-items-center rounded-full transition-all duration-500', done ? 'bg-[#e63922] text-white' : 'bg-[#141210]/10 text-[#141210]/30', i === step && 'animate-pop')}><s.i className="h-5 w-5" /></div>
-                    {i < STEPS.length - 1 && <div className={cx('h-8 w-0.5 transition-colors duration-700', i < step ? 'bg-[#e63922]' : 'bg-[#141210]/10')} />}
-                  </div>
-                  <div className={cx('pt-1.5 transition-opacity', done ? 'opacity-100' : 'opacity-40')}><div className="font-bold">{s.t}</div><div className="text-[13px] text-[#141210]/60">{s.d}</div></div>
-                </li>
-              )
-            })}
-          </ol>
-          <p className="mt-4 rounded-xl bg-[#141210]/5 p-3 text-[12px] text-[#141210]/60">Simulación acelerada: en la web real el estado se actualiza a medida que la cocina avanza.</p>
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            <button onClick={() => setWa(true)} className="flex items-center justify-center gap-2 rounded-full bg-[#25d366] py-3 text-sm font-bold text-white"><MessageCircle className="h-4 w-4" /> Ver en WhatsApp</button>
-            <button onClick={onClose} className="rounded-full bg-[#141210] py-3 text-sm font-bold text-white">Cerrar</button>
-          </div>
-        </div>
-      </Sheet>
-      <WhatsAppSim open={wa} onClose={() => setWa(false)} business={BIZ} message={snapshot} />
-    </>
   )
 }

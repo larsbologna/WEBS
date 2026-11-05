@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
-import { ArrowLeft, Check, CreditCard, Heart, Minus, Plus, Ruler, Search, ShoppingBag, SlidersHorizontal, Store, Trash2, Truck, X, Lock, RotateCcw, PackageCheck } from 'lucide-react'
+import { ArrowLeft, Heart, Minus, Plus, Ruler, Search, ShoppingBag, SlidersHorizontal, Store, Trash2, Truck, X, RotateCcw, MessageCircle } from 'lucide-react'
 import { DemoShell, Reveal, Sheet, SmartImg, Tip, toast } from '../../shared/ui'
 import { useCart } from '../../shared/useCart'
+import { WhatsAppOrderButton } from '../../shared/whatsapp'
 import { safeRead, safeWrite } from '../../shared/store'
 import { cx, img, money } from '../../shared/format'
 
@@ -32,7 +33,6 @@ const PRODUCTS: Product[] = [
 ]
 const CATS: (Cat | 'Todo')[] = ['Todo', 'Remeras', 'Buzos', 'Camperas', 'Jeans', 'Camisas', 'Vestidos', 'Zapatillas']
 const SORTS = ['Novedades', 'Menor precio', 'Mayor precio', 'Ofertas primero'] as const
-const FREE = 80000
 
 export default function Ropa() {
   const cart = useCart('ropa')
@@ -46,7 +46,6 @@ export default function Ropa() {
   const [favs, setFavs] = useState<string[]>(() => safeRead('distrito-favs', []))
   const [favOpen, setFavOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
-  const [checkout, setCheckout] = useState(false)
 
   const toggleFav = (id: string) => setFavs((f) => { const n = f.includes(id) ? f.filter((x) => x !== id) : [...f, id]; safeWrite('distrito-favs', n); toast(f.includes(id) ? 'Quitado de favoritos' : 'Guardado en favoritos ♥'); return n })
 
@@ -64,7 +63,7 @@ export default function Ropa() {
   return (
     <DemoShell slug="ropa" fonts="family=Archivo+Black&family=Archivo:wght@400;500;600;700" themeColor="#ffffff"
       className="pb-20" style={{ background: '#fff', color: '#111', fontFamily: 'Archivo, sans-serif', ['--fd' as string]: '"Archivo Black", sans-serif' }}>
-      <div className="bg-black py-2 text-center text-[12px] font-semibold uppercase tracking-wider text-white">Envío gratis desde {money(FREE)} · 3 cuotas sin interés · Cambios gratis</div>
+      <div className="bg-black py-2 text-center text-[12px] font-semibold uppercase tracking-wider text-white">Armá tu pedido y lo cerrás por WhatsApp · Cambios gratis</div>
       <header className="sticky top-0 z-40 border-b border-black/10 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3">
           <div className="font-(family-name:--fd) text-[22px] uppercase leading-none tracking-tight">Distrito<span style={{ color: OR }}>.</span></div>
@@ -126,7 +125,7 @@ export default function Ropa() {
           <h2 className="font-(family-name:--fd) text-4xl uppercase leading-none">{cat === 'Todo' ? 'Tienda' : cat}</h2>
           <span className="text-sm text-black/50">{list.length} productos</span>
         </div>
-        <Tip className="mt-4 !mx-0">una tienda online abierta 24/7: el cliente filtra, elige talle y color, y compra sin preguntarte por mensaje si hay stock.</Tip>
+        <Tip className="mt-4 !mx-0">una tienda online abierta 24/7: el cliente filtra, elige talle y color, y te llega el pedido completo por WhatsApp.</Tip>
         <div className="sticky top-[57px] z-30 -mx-5 mt-4 border-b border-black/10 bg-white px-5 py-2">
           <div className="flex items-center gap-2">
             <div className="no-scrollbar flex flex-1 gap-1.5 overflow-x-auto">
@@ -162,7 +161,6 @@ export default function Ropa() {
                 <button onClick={() => setProduct(p)} className="mt-2 block w-full text-left">
                   <div className="text-[13.5px] font-semibold leading-tight">{p.name}</div>
                   <div className="mt-1 flex items-baseline gap-2"><span className="font-bold">{money(p.price)}</span>{p.was && <span className="text-[12px] text-black/40 line-through">{money(p.was)}</span>}</div>
-                  <div className="text-[11px] text-black/50">3 cuotas de {money(p.price / 3)}</div>
                   <div className="mt-1.5 flex gap-1">{p.colors.map((c) => <span key={c.n} className="h-3 w-3 rounded-full ring-1 ring-black/15" style={{ background: c.hex }} title={c.n} />)}</div>
                 </button>
               </div>
@@ -174,11 +172,11 @@ export default function Ropa() {
       {/* BENEFICIOS */}
       <section className="mx-auto max-w-6xl px-5 pt-16">
         <div className="grid grid-cols-2 gap-px border border-black/10 bg-black/10 md:grid-cols-4">
-          {[{ i: Truck, t: 'Envíos a todo el país', d: '24–48 h en zona sur' }, { i: Store, t: 'Retiro en local', d: 'Gratis, en 2 h' }, { i: CreditCard, t: '3 cuotas sin interés', d: 'Todas las tarjetas' }, { i: RotateCcw, t: 'Cambios gratis', d: 'Hasta 30 días' }].map(({ i: I, t, d }) => (
+          {[{ i: ShoppingBag, t: 'Armá tu carrito', d: 'Elegí talle, color y cantidad' }, { i: MessageCircle, t: 'Pedí por WhatsApp', d: 'Te llega el pedido armado' }, { i: Store, t: 'Coordinamos con vos', d: 'Envío o retiro, como prefieras' }, { i: RotateCcw, t: 'Cambios gratis', d: 'Hasta 30 días' }].map(({ i: I, t, d }) => (
             <div key={t} className="bg-white p-4"><I className="h-5 w-5" /><div className="mt-2 text-[14px] font-bold leading-tight">{t}</div><div className="text-[12px] text-black/55">{d}</div></div>
           ))}
         </div>
-        <Tip className="mt-4">mostrar envíos, cuotas y cambios elimina las dudas que frenan una compra online.</Tip>
+        <Tip className="mt-4">el cliente arma el pedido solo y te llega completo por WhatsApp: menos preguntas, más ventas cerradas.</Tip>
       </section>
 
       <footer className="mt-16 bg-black px-5 py-12 text-white">
@@ -192,8 +190,7 @@ export default function Ropa() {
       <ProductSheet product={product} onClose={() => setProduct(null)} fav={!!product && favs.includes(product.id)} onFav={() => product && toggleFav(product.id)}
         onAdd={(l) => { cart.add(l); setProduct(null); toast('Agregado al carrito'); setTimeout(() => setCartOpen(true), 250) }} />
       <FavSheet open={favOpen} onClose={() => setFavOpen(false)} favs={favs} onOpen={(p) => { setFavOpen(false); setProduct(p) }} onRemove={toggleFav} />
-      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} onCheckout={() => { setCartOpen(false); setCheckout(true) }} />
-      <Checkout open={checkout} onClose={() => setCheckout(false)} cart={cart} />
+      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
     </DemoShell>
   )
 }
@@ -256,7 +253,6 @@ function ProductSheet({ product: p, onClose, onAdd, fav, onFav }: { product: Pro
             <div className="text-[12px] font-bold uppercase tracking-wider text-black/45">{p.cat}</div>
             <h3 className="mt-1 font-(family-name:--fd) text-2xl uppercase leading-tight">{p.name}</h3>
             <div className="mt-2 flex items-baseline gap-2"><span className="text-xl font-bold">{money(p.price)}</span>{p.was && <><span className="text-black/40 line-through">{money(p.was)}</span><span className="text-sm font-bold" style={{ color: OR }}>-{Math.round((1 - p.price / p.was) * 100)}%</span></>}</div>
-            <div className="text-[13px] text-black/55">3 cuotas sin interés de {money(p.price / 3)} · 10% off con transferencia</div>
 
             <div className="mt-5 text-sm"><b>Color:</b> {p.colors[color].n}</div>
             <div className="mt-2 flex gap-2">
@@ -323,8 +319,7 @@ function FavSheet({ open, onClose, favs, onOpen, onRemove }: { open: boolean; on
   )
 }
 
-function CartSheet({ open, onClose, cart, onCheckout }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart>; onCheckout: () => void }) {
-  const pct = Math.min(100, (cart.total / FREE) * 100)
+function CartSheet({ open, onClose, cart }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart> }) {
   return (
     <Sheet open={open} onClose={onClose} side="right" className="bg-white" label="Carrito">
       <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Archivo, sans-serif', color: '#111' }}>
@@ -333,10 +328,6 @@ function CartSheet({ open, onClose, cart, onCheckout }: { open: boolean; onClose
           <div className="grid flex-1 place-items-center p-8 text-center"><div><ShoppingBag className="mx-auto h-10 w-10 text-black/20" /><p className="mt-3 font-semibold">Tu carrito está vacío</p><button onClick={onClose} className="mt-4 bg-black px-6 py-3 text-sm font-bold uppercase text-white">Seguir comprando</button></div></div>
         ) : (
           <>
-            <div className="border-b border-black/10 px-5 py-3">
-              <div className="text-[13px]">{pct >= 100 ? <b>¡Tenés envío gratis! 🎉</b> : <>Te faltan <b>{money(FREE - cart.total)}</b> para el envío gratis</>}</div>
-              <div className="mt-2 h-1.5 overflow-hidden bg-black/10"><div className="h-full transition-all duration-500" style={{ width: `${pct}%`, background: pct >= 100 ? '#16a34a' : OR }} /></div>
-            </div>
             <ul className="min-h-0 flex-1 divide-y divide-black/10 overflow-y-auto px-5">
               {cart.lines.map((l) => (
                 <li key={l.key} className="flex gap-3 py-4">
@@ -357,102 +348,8 @@ function CartSheet({ open, onClose, cart, onCheckout }: { open: boolean; onClose
               ))}
             </ul>
             <div className="border-t border-black/10 p-5" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
-              <div className="flex justify-between text-lg font-bold"><span>Subtotal</span><span>{money(cart.total)}</span></div>
-              <div className="text-[12px] text-black/55">o 3 cuotas sin interés de {money(cart.total / 3)}</div>
-              <button onClick={onCheckout} className="mt-4 flex w-full items-center justify-center gap-2 bg-black py-4 text-sm font-bold uppercase tracking-wider text-white"><Lock className="h-4 w-4" /> Iniciar compra</button>
-            </div>
-          </>
-        )}
-      </div>
-    </Sheet>
-  )
-}
-
-function Checkout({ open, onClose, cart }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart> }) {
-  const [step, setStep] = useState(0)
-  const [d, setD] = useState({ email: '', name: '', addr: '', city: 'Berazategui', ship: 'domicilio', pay: 'tarjeta', card: '', exp: '', cvv: '', coupon: '' })
-  const [applied, setApplied] = useState(false)
-  const [order, setOrder] = useState<null | { n: string; total: number; count: number }>(null)
-  const [processing, setProcessing] = useState(false)
-  const set = (k: keyof typeof d, v: string) => setD((x) => ({ ...x, [k]: v }))
-  const shipCost = d.ship === 'retiro' || cart.total >= FREE ? 0 : 4900
-  const disc = (applied ? cart.total * 0.1 : 0) + (d.pay === 'transferencia' ? cart.total * 0.1 : 0)
-  const total = cart.total - disc + shipCost
-  const valid = [/\S+@\S+\.\S+/.test(d.email) && d.name.trim().length > 2, d.ship === 'retiro' || d.addr.trim().length > 4, d.pay !== 'tarjeta' || (d.card.replace(/\D/g, '').length >= 15 && d.exp.length >= 4 && d.cvv.length >= 3)][step]
-  const close = () => { onClose(); if (order) { setOrder(null); setStep(0) } }
-  const pay = () => {
-    setProcessing(true)
-    setTimeout(() => { setOrder({ n: `DST-${Math.floor(10000 + Math.random() * 89999)}`, total, count: cart.count }); cart.clear(); setProcessing(false) }, 1400)
-  }
-  const field = 'w-full border border-black/15 px-4 py-3.5 outline-none focus:border-black'
-  return (
-    <Sheet open={open} onClose={close} side="right" className="bg-white" label="Checkout">
-      <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Archivo, sans-serif', color: '#111' }}>
-        <div className="flex items-center justify-between border-b border-black/10 p-5">
-          {!order && step > 0 ? <button onClick={() => setStep(step - 1)} aria-label="Atrás"><ArrowLeft className="h-6 w-6" /></button> : <span className="w-6" />}
-          <div className="flex items-center gap-1.5 font-(family-name:--fd) uppercase"><Lock className="h-4 w-4" /> Compra segura</div>
-          <button onClick={close} aria-label="Cerrar"><X className="h-6 w-6" /></button>
-        </div>
-        {order ? (
-          <div className="flex-1 overflow-y-auto p-6 text-center">
-            <div className="animate-pop mx-auto grid h-20 w-20 place-items-center rounded-full bg-black text-white"><PackageCheck className="h-10 w-10" /></div>
-            <div className="mt-4 font-(family-name:--fd) text-3xl uppercase">¡Compra confirmada!</div>
-            <p className="mt-1 text-black/60">Te enviamos el detalle a {d.email}</p>
-            <div className="mt-6 border border-black/10 p-5 text-left text-sm">
-              <div className="flex justify-between"><span className="text-black/55">N° de pedido</span><b>{order.n}</b></div>
-              <div className="mt-2 flex justify-between"><span className="text-black/55">Productos</span><b>{order.count}</b></div>
-              <div className="mt-2 flex justify-between"><span className="text-black/55">Entrega</span><b>{d.ship === 'retiro' ? 'Retiro en local (2 h)' : 'Domicilio (24–48 h)'}</b></div>
-              <div className="mt-2 flex justify-between border-t border-black/10 pt-2 text-base"><span>Total pagado</span><b>{money(order.total)}</b></div>
-            </div>
-            <p className="mt-4 bg-black/5 p-3 text-[12px] text-black/55">Demostración: no se realizó ningún cobro ni envío real.</p>
-            <button onClick={close} className="mt-4 w-full bg-black py-4 text-sm font-bold uppercase text-white">Seguir comprando</button>
-          </div>
-        ) : (
-          <>
-            <div className="flex gap-1 px-5 pt-4">{['Datos', 'Entrega', 'Pago'].map((s, i) => <div key={s} className="flex-1"><div className={cx('h-1 transition-colors', i <= step ? 'bg-black' : 'bg-black/10')} /><div className={cx('mt-1.5 text-[11px] font-bold uppercase tracking-wider', i <= step ? '' : 'text-black/35')}>{s}</div></div>)}</div>
-            <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-5">
-              {step === 0 && <>
-                <input className={field} placeholder="Email" type="email" value={d.email} onChange={(e) => set('email', e.target.value)} />
-                <input className={field} placeholder="Nombre y apellido" value={d.name} onChange={(e) => set('name', e.target.value)} />
-                <div className="flex gap-2">
-                  <input className={cx(field, 'uppercase')} placeholder="Cupón de descuento" value={d.coupon} onChange={(e) => set('coupon', e.target.value)} />
-                  <button onClick={() => { if (d.coupon.trim().toUpperCase() === 'DISTRITO10') { setApplied(true); toast('Cupón aplicado: 10% off') } else toast('Cupón inválido. Probá DISTRITO10') }} className="shrink-0 border border-black px-4 text-sm font-bold uppercase">Aplicar</button>
-                </div>
-                {applied && <div className="flex items-center gap-2 text-sm font-semibold text-green-700"><Check className="h-4 w-4" /> DISTRITO10 aplicado</div>}
-              </>}
-              {step === 1 && <>
-                {[{ v: 'domicilio', t: 'Envío a domicilio', s: cart.total >= FREE ? 'Gratis · 24–48 h' : `${money(4900)} · 24–48 h`, i: Truck }, { v: 'retiro', t: 'Retiro en el local', s: 'Gratis · listo en 2 h', i: Store }].map((o) => (
-                  <button key={o.v} onClick={() => set('ship', o.v)} className={cx('flex w-full items-center gap-3 border p-4 text-left', d.ship === o.v ? 'border-black ring-1 ring-black' : 'border-black/15')}>
-                    <o.i className="h-5 w-5" /><div className="flex-1"><div className="font-semibold">{o.t}</div><div className="text-[13px] text-black/55">{o.s}</div></div>
-                    <span className={cx('h-5 w-5 rounded-full border-2', d.ship === o.v ? 'border-[6px] border-black' : 'border-black/25')} />
-                  </button>
-                ))}
-                {d.ship === 'domicilio' && <><input className={field} placeholder="Calle y número" value={d.addr} onChange={(e) => set('addr', e.target.value)} /><input className={field} placeholder="Localidad" value={d.city} onChange={(e) => set('city', e.target.value)} /></>}
-              </>}
-              {step === 2 && <>
-                {[{ v: 'tarjeta', t: 'Tarjeta de crédito / débito', s: 'Hasta 3 cuotas sin interés' }, { v: 'transferencia', t: 'Transferencia bancaria', s: '10% de descuento' }, { v: 'mp', t: 'Mercado Pago', s: 'Dinero en cuenta o cuotas' }].map((o) => (
-                  <button key={o.v} onClick={() => set('pay', o.v)} className={cx('flex w-full items-center gap-3 border p-4 text-left', d.pay === o.v ? 'border-black ring-1 ring-black' : 'border-black/15')}>
-                    <div className="flex-1"><div className="font-semibold">{o.t}</div><div className="text-[13px] text-black/55">{o.s}</div></div>
-                    <span className={cx('h-5 w-5 rounded-full border-2', d.pay === o.v ? 'border-[6px] border-black' : 'border-black/25')} />
-                  </button>
-                ))}
-                {d.pay === 'tarjeta' && (
-                  <div className="animate-fade-in space-y-2 bg-black/[.03] p-3">
-                    <input className={field + ' bg-white'} inputMode="numeric" placeholder="Número de tarjeta (ej: 4242 4242 4242 4242)" value={d.card} onChange={(e) => set('card', e.target.value.replace(/[^\d ]/g, '').slice(0, 19))} />
-                    <div className="flex gap-2"><input className={field + ' bg-white'} placeholder="MM/AA" value={d.exp} onChange={(e) => set('exp', e.target.value.slice(0, 5))} /><input className={field + ' bg-white'} inputMode="numeric" placeholder="CVV" value={d.cvv} onChange={(e) => set('cvv', e.target.value.replace(/\D/g, '').slice(0, 4))} /></div>
-                    <p className="text-[11px] text-black/50">Demo: usá cualquier número. No se procesa ningún pago.</p>
-                  </div>
-                )}
-              </>}
-            </div>
-            <div className="border-t border-black/10 p-5 text-sm" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
-              <div className="flex justify-between"><span>Subtotal</span><span>{money(cart.total)}</span></div>
-              {disc > 0 && <div className="flex justify-between text-green-700"><span>Descuentos</span><span>-{money(disc)}</span></div>}
-              <div className="flex justify-between"><span>Envío</span><span>{shipCost ? money(shipCost) : 'Gratis'}</span></div>
-              <div className="mt-1 flex justify-between text-lg font-bold"><span>Total</span><span>{money(total)}</span></div>
-              <button disabled={!valid || processing || cart.lines.length === 0} onClick={() => (step < 2 ? setStep(step + 1) : pay())} className="mt-3 w-full bg-black py-4 text-sm font-bold uppercase tracking-wider text-white transition disabled:opacity-30">
-                {processing ? 'Procesando pago…' : step < 2 ? 'Continuar' : `Pagar ${money(total)}`}
-              </button>
+              <div className="mb-4 flex justify-between text-lg font-bold"><span>Total</span><span>{money(cart.total)}</span></div>
+              <WhatsAppOrderButton slug="ropa" business="Distrito Clothing" lines={cart.lines} total={cart.total} className="rounded-none text-sm uppercase tracking-wider" />
             </div>
           </>
         )}
