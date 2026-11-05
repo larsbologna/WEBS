@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { ChevronRight, Gift, Minus, Plus, ShoppingBag, SlidersHorizontal, Sparkles, Star, Trash2, X, Wand2, RotateCcw } from 'lucide-react'
-import { DemoShell, Reveal, Sheet, SmartImg, Tip, WhatsAppSim, toast } from '../../shared/ui'
-import { useCart, orderText } from '../../shared/useCart'
+import { DemoShell, Reveal, Sheet, SmartImg, Tip, toast } from '../../shared/ui'
+import { useCart } from '../../shared/useCart'
+import { WhatsAppOrderButton } from '../../shared/whatsapp'
 import { cx, img, money } from '../../shared/format'
 
 const BIZ = 'Essence Store'
@@ -290,13 +291,11 @@ function ProductSheet({ p, onClose, onAdd }: { p: P | null; onClose: () => void;
 function CartSheet({ open, onClose, cart }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart> }) {
   const [gift, setGift] = useState(false)
   const [note, setNote] = useState('')
-  const [wa, setWa] = useState(false)
   // 20% off en la segunda unidad más barata
   const units = cart.lines.flatMap((l) => Array.from({ length: l.qty }, () => l.price)).sort((a, b) => b - a)
   const promo = units.length >= 2 ? units[1] * 0.2 : 0
   const total = cart.total - promo
   return (
-    <>
       <Sheet open={open} onClose={onClose} side="right" className="bg-[#f7f3ee]" label="Bolsa">
         <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Montserrat, sans-serif', color: PLUM }}>
           <div className="flex items-center justify-between border-b border-[#3d1530]/10 p-5"><div className="font-(family-name:--fd) text-2xl">Tu bolsa</div><button onClick={onClose} aria-label="Cerrar"><X className="h-6 w-6" /></button></div>
@@ -335,17 +334,13 @@ function CartSheet({ open, onClose, cart }: { open: boolean; onClose: () => void
                 <div className="flex justify-between"><span>Subtotal</span><span>{money(cart.total)}</span></div>
                 {promo > 0 && <div className="flex justify-between" style={{ color: GOLD }}><span>20% off 2da fragancia</span><span>-{money(promo)}</span></div>}
                 <div className="mt-1 flex justify-between font-(family-name:--fd) text-2xl"><span>Total</span><span>{money(total)}</span></div>
-                <button onClick={() => setWa(true)} className="mt-4 flex w-full items-center justify-center gap-2 py-4 text-[12px] uppercase tracking-[.2em] text-white" style={{ background: PLUM }}>Finalizar pedido <ChevronRight className="h-4 w-4" /></button>
-                <p className="mt-2 text-center text-[11px] text-[#3d1530]/50">Coordinás pago y entrega por WhatsApp con una asesora.</p>
+                <div className="mt-4"><WhatsAppOrderButton slug="perfumeria" business={BIZ} lines={cart.lines} total={total} className="rounded-none text-[12px] uppercase tracking-[.2em]"
+                  extra={[promo ? `(incluye 20% off en 2da fragancia: -${money(promo)})` : '', gift ? `🎁 Para regalo${note ? `: "${note}"` : ''}` : ''].filter(Boolean)} /></div>
               </div>
             </>
           )}
         </div>
       </Sheet>
-      <WhatsAppSim open={wa} onClose={() => setWa(false)} business={BIZ}
-        message={orderText(BIZ, cart.lines, total, [promo ? `(incluye 20% off en 2da fragancia: -${money(promo)})` : '', gift ? `🎁 Para regalo${note ? `: "${note}"` : ''}` : ''].filter(Boolean))}
-        onSent={() => setTimeout(() => { cart.clear(); setGift(false); setNote(''); onClose() }, 400)} />
-    </>
   )
 }
 

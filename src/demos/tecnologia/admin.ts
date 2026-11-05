@@ -1,8 +1,12 @@
 import type { AdminConfig } from '../../admin/types'
 const cfg: AdminConfig = {
   name: 'Conecta Tech', accent: '#1d4ed8', kind: 'shop', perDay: [14, 26], itemsPerSale: [1, 3], hours: [9, 20], closedDows: [0],
-  channels: ['Tienda online', 'Local', 'WhatsApp'],
+  channels: ['WhatsApp', 'Local', 'Instagram'],
   products: [
+    { name: 'Samsung Galaxy A56 5G', cat: 'Celulares', cost: 590000, price: 749999, stock: 6, min: 3 },
+    { name: 'Motorola Moto G85 5G', cat: 'Celulares', cost: 360000, price: 459999, stock: 8, min: 3 },
+    { name: 'Xiaomi Redmi Note 14', cat: 'Celulares', cost: 310000, price: 399999, stock: 2, min: 3 },
+    { name: 'iPhone 15 128 GB', cat: 'Celulares', cost: 1080000, price: 1299999, stock: 3, min: 2 },
     { name: 'Cable HDMI 2.1 8K', cat: 'Cables', cost: 4800, price: 12900, stock: 42, min: 15 },
     { name: 'Adaptador USB-C a HDMI 4K', cat: 'Adaptadores', cost: 8200, price: 18500, stock: 6, min: 10 },
     { name: 'Chromecast con Google TV 4K', cat: 'Streaming', cost: 52000, price: 79900, stock: 11, min: 6 },

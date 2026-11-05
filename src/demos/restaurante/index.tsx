@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from 'react'
-import { Bike, Clock, Leaf, MapPin, Minus, Navigation, Phone, Plus, ShoppingBag, Star, Store, Trash2, X, Flame, ChevronRight } from 'lucide-react'
-import { DemoShell, Reveal, Sheet, SmartImg, Tip, WhatsAppSim, toast } from '../../shared/ui'
-import { useCart, orderText } from '../../shared/useCart'
+import { Bike, Clock, Leaf, MapPin, Minus, Navigation, Phone, Plus, ShoppingBag, Star, Store, Trash2, X, Flame } from 'lucide-react'
+import { DemoShell, Reveal, Sheet, SmartImg, Tip, toast } from '../../shared/ui'
+import { useCart } from '../../shared/useCart'
+import { WhatsAppOrderButton } from '../../shared/whatsapp'
 import { cx, img, money } from '../../shared/format'
 
 const BIZ = 'Casa del Sabor'
@@ -77,10 +78,8 @@ export default function Restaurante() {
   const [veggie, setVeggie] = useState(false)
   const [dish, setDish] = useState<Dish | null>(null)
   const [cartOpen, setCartOpen] = useState(false)
-  const [wa, setWa] = useState(false)
   const status = useMemo(openStatus, [])
   const menuRef = useRef<HTMLDivElement>(null)
-  const [extra, setExtra] = useState<{ fee: number; lines: string[] }>({ fee: 0, lines: [] })
 
   const items = MENU.filter((d) => d.cat === cat && (!veggie || d.tags?.includes('veggie')))
 
@@ -316,10 +315,7 @@ export default function Restaurante() {
       }} />
 
       {/* CARRITO */}
-      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} onOrder={(extra) => { setWa(true); setExtra(extra) }} />
-      <WhatsAppSim open={wa} onClose={() => setWa(false)} business={BIZ}
-        message={orderText(BIZ, cart.lines, cart.total + extra.fee, extra.lines)}
-        onSent={() => { setTimeout(() => { cart.clear(); setCartOpen(false) }, 400) }} />
+      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
     </DemoShell>
   )
 }
@@ -368,13 +364,7 @@ function DishSheet({ dish, onClose, onAdd }: { dish: Dish | null; onClose: () =>
   )
 }
 
-function CartSheet({ open, onClose, cart, onOrder }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart>; onOrder: (e: { fee: number; lines: string[] }) => void }) {
-  const [mode, setMode] = useState<'delivery' | 'retiro'>('delivery')
-  const [name, setName] = useState('')
-  const [addr, setAddr] = useState('')
-  const [pay, setPay] = useState('Efectivo')
-  const fee = mode === 'delivery' ? (cart.total >= 30000 ? 0 : 2500) : 0
-  const valid = name.trim().length > 1 && (mode === 'retiro' || addr.trim().length > 3)
+function CartSheet({ open, onClose, cart }: { open: boolean; onClose: () => void; cart: ReturnType<typeof useCart> }) {
   return (
     <Sheet open={open} onClose={onClose} side="right" className="bg-[#f6efe4]" label="Tu pedido">
       <div className="flex h-full min-h-0 flex-col" style={{ fontFamily: 'Karla, sans-serif', color: C.ink }}>
@@ -393,7 +383,7 @@ function CartSheet({ open, onClose, cart, onOrder }: { open: boolean; onClose: (
           </div>
         ) : (
           <>
-            <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-5">
+            <div className="min-h-0 flex-1 overflow-y-auto p-5">
               <ul className="space-y-3">
                 {cart.lines.map((l) => (
                   <li key={l.key} className="flex items-center gap-3 rounded-2xl bg-[#fffaf2] p-2.5">
@@ -411,38 +401,10 @@ function CartSheet({ open, onClose, cart, onOrder }: { open: boolean; onClose: (
                   </li>
                 ))}
               </ul>
-              <div className="grid grid-cols-2 gap-1 rounded-full bg-[#fffaf2] p-1">
-                {(['delivery', 'retiro'] as const).map((m) => (
-                  <button key={m} onClick={() => setMode(m)} className={cx('flex items-center justify-center gap-2 rounded-full py-2.5 text-sm font-bold transition', mode === m && 'bg-[#2a1d14] text-[#f6efe4]')}>
-                    {m === 'delivery' ? <><Bike className="h-4 w-4" /> Delivery</> : <><Store className="h-4 w-4" /> Retiro en local</>}
-                  </button>
-                ))}
-              </div>
-              <div className="space-y-2">
-                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Tu nombre" className="w-full rounded-2xl bg-[#fffaf2] px-4 py-3 outline-none ring-1 ring-[#2a1d14]/10 focus:ring-[#b4441f]" />
-                {mode === 'delivery' && <input value={addr} onChange={(e) => setAddr(e.target.value)} placeholder="Dirección de entrega" className="w-full rounded-2xl bg-[#fffaf2] px-4 py-3 outline-none ring-1 ring-[#2a1d14]/10 focus:ring-[#b4441f]" />}
-                <div className="flex gap-2">
-                  {['Efectivo', 'Transferencia', 'Mercado Pago'].map((p) => (
-                    <button key={p} onClick={() => setPay(p)} className={cx('flex-1 rounded-xl px-2 py-2 text-[12.5px] font-bold ring-1 transition', pay === p ? 'bg-[#b4441f] text-white ring-[#b4441f]' : 'bg-[#fffaf2] ring-[#2a1d14]/10')}>{p}</button>
-                  ))}
-                </div>
-              </div>
-              {mode === 'delivery' && cart.total < 30000 && (
-                <div className="rounded-2xl bg-[#5b6340]/10 px-4 py-3 text-[13px] text-[#5b6340]">Te faltan <b>{money(30000 - cart.total)}</b> para el envío gratis.</div>
-              )}
             </div>
             <div className="border-t border-[#2a1d14]/10 bg-[#fffaf2] p-5" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
-              <div className="space-y-1 text-[14px]">
-                <div className="flex justify-between"><span>Subtotal</span><span>{money(cart.total)}</span></div>
-                <div className="flex justify-between"><span>Envío</span><span>{mode === 'retiro' ? 'Sin cargo' : fee === 0 ? 'Gratis' : money(fee)}</span></div>
-                <div className="flex justify-between pt-1 text-lg font-bold"><span>Total</span><span>{money(cart.total + fee)}</span></div>
-              </div>
-              <button disabled={!valid}
-                onClick={() => onOrder({ fee, lines: ['', `👤 ${name}`, mode === 'delivery' ? `🛵 Delivery a: ${addr}` : '🏪 Retiro en el local', `💳 Pago: ${pay}`, fee ? `Envío: ${money(fee)}` : ''].filter((x, i) => i === 0 || x) })}
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-[#25d366] py-3.5 font-bold text-white transition active:scale-[.98] disabled:bg-[#2a1d14]/20 disabled:text-[#2a1d14]/50">
-                Pedir por WhatsApp <ChevronRight className="h-4 w-4" />
-              </button>
-              {!valid && <p className="mt-2 text-center text-[12px] text-[#2a1d14]/55">Completá tu nombre{mode === 'delivery' ? ' y dirección' : ''} para continuar</p>}
+              <div className="mb-4 flex justify-between text-lg font-bold"><span>Total</span><span>{money(cart.total)}</span></div>
+              <WhatsAppOrderButton slug="restaurante" business={BIZ} lines={cart.lines} total={cart.total} />
             </div>
           </>
         )}

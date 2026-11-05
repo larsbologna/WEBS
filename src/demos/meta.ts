@@ -10,6 +10,8 @@ export type DemoMeta = {
   image: string // id de Unsplash
   fallback: string // gradiente si no carga la imagen
   features: string[]
+  /** WhatsApp del negocio para recibir pedidos (solo dígitos, ej. 5491112345678). Vacío: se elige el contacto. */
+  whatsapp?: string
 }
 
 export const DEMOS: DemoMeta[] = [
@@ -45,9 +47,9 @@ export const DEMOS: DemoMeta[] = [
   },
   {
     slug: 'ropa', num: '06', rubro: 'Tienda de ropa', name: 'Distrito Clothing', category: 'Comercios',
-    description: 'Tienda online completa: filtros, talles, colores, favoritos y checkout.',
+    description: 'Tienda online completa: filtros, talles, colores, favoritos y pedido por WhatsApp.',
     image: '1441986300917-64674bd600d8', fallback: 'linear-gradient(135deg,#111,#525252)',
-    features: ['Catálogo', 'Talles y colores', 'Favoritos', 'Checkout'],
+    features: ['Catálogo', 'Talles y colores', 'Favoritos', 'Pedido WhatsApp'],
   },
   {
     slug: 'perfumeria', num: '07', rubro: 'Perfumería', name: 'Essence Store', category: 'Belleza y cuidado',
@@ -75,15 +77,15 @@ export const DEMOS: DemoMeta[] = [
   },
   {
     slug: 'tecnologia', num: '11', rubro: 'Tecnología', name: 'Conecta Tech', category: 'Comercios',
-    description: 'Cables, streaming, cargadores y accesorios con buscador, guía "¿qué cable necesito?" y carrito.',
+    description: 'Celulares, cables HDMI, cargadores y accesorios con fotos, buscador, guía "¿qué cable necesito?" y pedido por WhatsApp.',
     image: '1550009158-9ebf69173e03', fallback: 'linear-gradient(135deg,#1d4ed8,#0f172a)',
-    features: ['Buscador', 'Guía de cables', 'Combos', 'Checkout'],
+    features: ['Celulares', 'Buscador', 'Guía de cables', 'Pedido WhatsApp'],
   },
   {
     slug: 'iphones', num: '12', rubro: 'Tienda de iPhones', name: 'Órbita Mobile', category: 'Comercios',
     description: 'iPhones nuevos y seleccionados con capacidad, color, batería, plan canje y precio en dólares o pesos.',
     image: '1592750475338-74b7b21085ab', fallback: 'linear-gradient(135deg,#4338ca,#111827)',
-    features: ['Plan canje', 'USD / ARS', 'Batería', 'Reserva'],
+    features: ['Plan canje', 'USD / ARS', 'Batería', 'Pedido WhatsApp'],
   },
   {
     slug: 'petshop', num: '13', rubro: 'Petshop', name: 'Colita Feliz', category: 'Comercios',
