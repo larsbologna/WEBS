@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, LayoutDashboard, CalendarCheck, Search, ShoppingCart, Smartphone, MessageCircle, Sparkles, MapPin, Zap, X } from 'lucide-react'
-import { DEMOS, CATEGORIES, BRAND, type Category } from '../demos/meta'
+import { ArrowUpRight, Briefcase, LayoutDashboard, CalendarCheck, Search, ShoppingCart, Smartphone, MessageCircle, Sparkles, MapPin, Store, Zap, X } from 'lucide-react'
+import { DEMOS, GROUPS, BRAND, type Category, type Group } from '../demos/meta'
 import { SmartImg, WhatsAppSim, Reveal } from '../shared/ui'
 import { cx, img } from '../shared/format'
 
 export default function Showroom() {
   const [q, setQ] = useState('')
+  const [group, setGroupState] = useState<Group>(() => (location.hash.includes('profesionales') ? 'profesional' : 'negocio'))
   const [cat, setCat] = useState<Category | 'Todos'>('Todos')
+  const setGroup = (g: Group) => { setGroupState(g); setCat('Todos') }
+  const groupInfo = GROUPS.find((g) => g.id === group)!
   const [contact, setContact] = useState(false)
 
   useEffect(() => {
@@ -16,8 +19,10 @@ export default function Showroom() {
 
   const list = useMemo(() => {
     const n = norm(q)
-    return DEMOS.filter((d) => (cat === 'Todos' || d.category === cat) && (!n || norm(`${d.rubro} ${d.name} ${d.description} ${d.features.join(' ')}`).includes(n)))
-  }, [q, cat])
+    // Al buscar se recorren las dos categorías; si no, se muestra la elegida.
+    if (n) return DEMOS.filter((d) => norm(`${d.rubro} ${d.name} ${d.description} ${d.features.join(' ')}`).includes(n))
+    return DEMOS.filter((d) => d.group === group && (cat === 'Todos' || d.category === cat))
+  }, [q, cat, group])
 
   return (
     <div className="min-h-dvh bg-[#0b0b12] text-white selection:bg-lime-300 selection:text-black">
@@ -44,14 +49,14 @@ export default function Showroom() {
         {/* HERO */}
         <section className="mx-auto max-w-6xl px-5 pb-8 pt-6 sm:pt-14">
           <div className="animate-fade-up mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[12px] text-white/70">
-            <MapPin className="h-3.5 w-3.5 text-lime-300" /> Webs para comercios de Berazategui y alrededores
+            <MapPin className="h-3.5 w-3.5 text-lime-300" /> Webs para negocios y profesionales de Berazategui y alrededores
           </div>
           <h1 className="animate-fade-up text-[44px] font-extrabold leading-[0.95] tracking-tight sm:text-7xl" style={{ animationDelay: '80ms' }}>
             Así podría verse <br className="hidden sm:block" />
             <span className="font-serif-display font-normal italic text-lime-300">tu negocio</span> en internet.
           </h1>
           <p className="animate-fade-up mt-5 max-w-xl text-[16px] leading-relaxed text-white/65 sm:text-lg" style={{ animationDelay: '160ms' }}>
-            Elegí tu rubro y probá una web real funcionando: pedidos por WhatsApp, turnos online, catálogo con precios y todo lo que tus clientes buscan antes de visitarte.
+            Elegí tu rubro o tu profesión y probá una web real funcionando: pedidos por WhatsApp, turnos online, catálogo con precios y todo lo que tus clientes buscan antes de visitarte.
           </p>
           <div className="animate-fade-up mt-7 grid grid-cols-3 gap-2 sm:max-w-xl" style={{ animationDelay: '240ms' }}>
             {[
@@ -76,28 +81,49 @@ export default function Showroom() {
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Buscá tu rubro: pizzería, barbería, óptica…"
+                placeholder="Buscá tu rubro o profesión: librería, uñas, odontóloga…"
                 className="h-11 w-full bg-transparent text-[15px] outline-none placeholder:text-white/40"
               />
               {q && <button onClick={() => setQ('')} aria-label="Limpiar"><X className="h-4 w-4 text-white/60" /></button>}
             </label>
-            <div className="no-scrollbar -mx-5 mt-3 flex gap-2 overflow-x-auto px-5">
-              {(['Todos', ...CATEGORIES] as const).map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setCat(c)}
-                  className={cx('shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition', cat === c ? 'bg-lime-300 text-black' : 'bg-white/[.06] text-white/75 hover:bg-white/10')}
-                >
-                  {c}
-                  <span className="ml-1.5 opacity-50">{c === 'Todos' ? DEMOS.length : DEMOS.filter((d) => d.category === c).length}</span>
-                </button>
-              ))}
+            <div className="mt-3 grid grid-cols-2 gap-1 rounded-2xl bg-white/[.06] p-1 ring-1 ring-white/10">
+              {GROUPS.map((g) => {
+                const I = g.id === 'negocio' ? Store : Briefcase
+                const active = group === g.id && !q
+                return (
+                  <button key={g.id} onClick={() => { setGroup(g.id); setQ('') }} aria-pressed={active}
+                    className={cx('flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-[14px] font-extrabold transition sm:text-[15px]', active ? 'bg-lime-300 text-black' : 'text-white/75 hover:bg-white/10')}>
+                    <I className="h-4 w-4 shrink-0" /><span className="sm:hidden">{g.short}</span><span className="hidden sm:inline">{g.label}</span>
+                    <span className={cx('rounded-full px-1.5 text-[11px]', active ? 'bg-black/10' : 'bg-white/10')}>{DEMOS.filter((d) => d.group === g.id).length}</span>
+                  </button>
+                )
+              })}
             </div>
+            {!q && (
+              <div className="no-scrollbar -mx-5 mt-3 flex gap-2 overflow-x-auto px-5">
+                {(['Todos', ...groupInfo.categories] as const).map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setCat(c)}
+                    className={cx('shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition', cat === c ? 'bg-white text-black' : 'bg-white/[.06] text-white/75 hover:bg-white/10')}
+                  >
+                    {c}
+                    <span className="ml-1.5 opacity-50">{c === 'Todos' ? DEMOS.filter((d) => d.group === group).length : DEMOS.filter((d) => d.group === group && d.category === c).length}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
         {/* GRID */}
         <section className="mx-auto max-w-6xl px-5 py-8">
+          {!q && (
+            <div className="mb-5">
+              <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{groupInfo.label}</h2>
+              <p className="mt-1 text-[14px] text-white/55">{group === 'negocio' ? 'Locales, comercios y servicios con atención al público.' : 'Webs personales para profesionales independientes: consultorios, estudios y más.'}</p>
+            </div>
+          )}
           {list.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-white/15 p-10 text-center">
               <p className="text-lg font-bold">¿Tu rubro no está?</p>
@@ -224,7 +250,7 @@ export default function Showroom() {
         open={contact}
         onClose={() => setContact(false)}
         business={`${BRAND.name} | Presencia Online`}
-        message={'¡Hola Iván! Vi las demos y me interesa una web para mi negocio. ¿Cuándo podemos charlar?'}
+        message={'¡Hola Iván! Vi las demos y me interesa una web para mi negocio o profesión. ¿Cuándo podemos charlar?'}
       />
     </div>
   )
