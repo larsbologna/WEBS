@@ -17,3 +17,24 @@ jobs:
         with:
           node-version: 22
       - run: node scripts/check-photos.mjs
+
+  # Temporal: baja miniaturas de fotos candidatas para elegir y las sube a la rama.
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: test -f scripts/probe-ids.txt && node scripts/probe-ids.mjs || echo "sin ids"
+      - run: |
+          if [ -n "$(git status --porcelain scripts/probe)" ]; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@users.noreply.github.com"
+            git add scripts/probe
+            git commit -m "Fotos candidatas"
+            git push
+          fi
