@@ -1,5 +1,5 @@
 export type Group = 'negocio' | 'profesional'
-export type Category = 'Gastronomía' | 'Belleza y cuidado' | 'Comercios' | 'Salud y bienestar' | 'Salud' | 'Legal y finanzas'
+export type Category = 'Gastronomía' | 'Belleza y cuidado' | 'Comercios' | 'Salud y bienestar' | 'Salud' | 'Legal y finanzas' | 'Arquitectura e inmuebles' | 'Comunicación y creativos' | 'Educación'
 
 export type DemoMeta = {
   slug: string
@@ -162,11 +162,59 @@ export const DEMOS: DemoMeta[] = [
     image: '1554224154-26032ffc0d07', fallback: 'linear-gradient(135deg,#12795f,#10241f)',
     features: ['Servicios', 'Abonos', 'Reuniones online', 'Preguntas'],
   },
+  {
+    slug: 'marketing', num: '25', rubro: 'Marketing digital', name: 'Agustina Vera', category: 'Comunicación y creativos', group: 'profesional',
+    description: 'Gestión de redes, campañas en Meta y Google, planes mensuales y llamada inicial agendada online.',
+    image: '1432888498266-38ffec3eaf0a', fallback: 'linear-gradient(135deg,#ff4d8d,#1a1033)',
+    features: ['Servicios', 'Planes', 'Casos', 'Agenda online'],
+  },
+  {
+    slug: 'arquitecta', num: '26', rubro: 'Arquitecta', name: 'Arq. Julieta Moreno', category: 'Arquitectura e inmuebles', group: 'profesional',
+    description: 'Proyecto, dirección de obra, reformas e interiorismo con portfolio de obras y reuniones agendadas.',
+    image: '1600585154340-be6161a56a0c', fallback: 'linear-gradient(135deg,#9c6b4a,#161616)',
+    features: ['Portfolio', 'Servicios', 'Proceso', 'Agenda online'],
+  },
+  {
+    slug: 'inmobiliaria', num: '27', rubro: 'Inmobiliaria', name: 'Bianchi Propiedades', category: 'Arquitectura e inmuebles', group: 'profesional',
+    description: 'Propiedades en venta y alquiler con fotos y precio, tasaciones y visitas coordinadas online.',
+    image: '1583608205776-bfd35f0d9f83', fallback: 'linear-gradient(135deg,#e4572e,#10213a)',
+    features: ['Propiedades', 'Visitas online', 'Tasaciones', 'WhatsApp'],
+  },
+  {
+    slug: 'escribania', num: '28', rubro: 'Escribanía', name: 'Escribanía Ledesma', category: 'Legal y finanzas', group: 'profesional',
+    description: 'Escrituras, poderes y certificaciones explicados en simple, con presupuesto y turnos online.',
+    image: '1450101499163-c8848c66ca85', fallback: 'linear-gradient(135deg,#1f3a68,#14213d)',
+    features: ['Trámites', 'Presupuesto', 'Turnos online', 'Preguntas'],
+  },
+  {
+    slug: 'seguros', num: '29', rubro: 'Productora de seguros', name: 'Romina Paz Seguros', category: 'Legal y finanzas', group: 'profesional',
+    description: 'Seguros de auto, hogar, vida y comercio con cotización por WhatsApp y llamada agendada.',
+    image: '1511632765486-a01980e01a18', fallback: 'linear-gradient(135deg,#1d64f2,#0b2545)',
+    features: ['Coberturas', 'Cotización', 'Siniestros', 'WhatsApp'],
+  },
+  {
+    slug: 'fotografo', num: '30', rubro: 'Fotógrafo', name: 'Tomás Ibarra', category: 'Comunicación y creativos', group: 'profesional',
+    description: 'Bodas, eventos, books y producto con galería de trabajos y consulta de fecha online.',
+    image: '1537633552985-df8429e8048b', fallback: 'linear-gradient(135deg,#e9d8b4,#111111)',
+    features: ['Galería', 'Servicios', 'Consulta de fecha', 'WhatsApp'],
+  },
+  {
+    slug: 'ingles', num: '31', rubro: 'Profesora de inglés', name: 'Miss Lucía Ortiz', category: 'Educación', group: 'profesional',
+    description: 'Cursos para chicos, adolescentes y adultos, exámenes internacionales y clase de nivelación online.',
+    image: '1544717305-2782549b5136', fallback: 'linear-gradient(135deg,#2f5bea,#1d2a5b)',
+    features: ['Cursos', 'Presencial u online', 'Nivelación', 'Preguntas'],
+  },
+  {
+    slug: 'pediatra', num: '32', rubro: 'Pediatra', name: 'Dra. Paula Correa', category: 'Salud', group: 'profesional',
+    description: 'Control del niño sano, recién nacidos y urgencias del día con obras sociales y turnos online.',
+    image: '1503454537195-1dcabb73ffb9', fallback: 'linear-gradient(135deg,#2bb3a3,#1f3b4d)',
+    features: ['Consultas', 'Obras sociales', 'Turnos online', 'Preguntas'],
+  },
 ]
 
 export const GROUPS: { id: Group; label: string; short: string; categories: Category[] }[] = [
   { id: 'negocio', label: 'Negocios con local', short: 'Negocios', categories: ['Gastronomía', 'Belleza y cuidado', 'Comercios', 'Salud y bienestar'] },
-  { id: 'profesional', label: 'Profesionales', short: 'Profesionales', categories: ['Salud', 'Legal y finanzas'] },
+  { id: 'profesional', label: 'Profesionales', short: 'Profesionales', categories: ['Salud', 'Legal y finanzas', 'Arquitectura e inmuebles', 'Comunicación y creativos', 'Educación'] },
 ]
 export const CATEGORIES: Category[] = GROUPS.flatMap((g) => g.categories)
 export const BRAND = { name: 'Iván', tagline: 'Gestor de Presencia Online', whatsapp: '+54 9 11 0000-0000' }

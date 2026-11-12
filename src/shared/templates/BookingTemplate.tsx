@@ -22,6 +22,8 @@ export type BookingConfig = {
   hero: { kicker: string; title: string; text: string; image: string; layout: 'portrait' | 'full' | 'editorial'; stats?: { v: string; l: string }[] }
   /** franja de confianza: obras sociales, medios de pago, etc. */
   trust?: { title: string; items: string[] }
+  /** cómo se llama la sección de servicios en el menú y en el botón de la portada (por defecto «Servicios») */
+  servicesNav?: string
   servicesKicker: string
   servicesTitle: string
   services: Service[]
@@ -67,7 +69,7 @@ export function BookingTemplate({ cfg }: { cfg: BookingConfig }) {
             </span>
           </a>
           <nav className="hidden items-center gap-6 text-[14px] font-semibold md:flex">
-            <a href="#servicios">Servicios</a><a href="#sobre">{cfg.about.kicker}</a><a href="#preguntas">Preguntas</a>
+            <a href="#servicios">{cfg.servicesNav ?? 'Servicios'}</a><a href="#sobre">{cfg.about.kicker}</a><a href="#preguntas">Preguntas</a>
           </nav>
           <button onClick={() => open()} className="shrink-0 px-4 py-2.5 text-[14px] font-bold transition active:scale-95" style={{ background: t.accent, color: t.accentInk, borderRadius: pill(t) }}>{cfg.booking.cta}</button>
         </div>
@@ -237,7 +239,7 @@ function Hero({ cfg, onBook }: { cfg: BookingConfig; onBook: () => void }) {
       <p className="animate-fade-up mt-4 max-w-lg text-[16.5px] leading-relaxed" style={{ animationDelay: '160ms', color: light ? 'rgba(255,255,255,.8)' : t.muted }}>{h.text}</p>
       <div className="animate-fade-up mt-7 flex flex-wrap gap-3" style={{ animationDelay: '240ms' }}>
         <button onClick={onBook} className="flex items-center gap-2 px-7 py-4 font-bold transition active:scale-95" style={{ background: t.accent, color: t.accentInk, borderRadius: pill(t) }}><CalendarCheck className="h-5 w-5" /> {cfg.booking.cta}</button>
-        <a href="#servicios" className="px-6 py-4 font-bold" style={{ border: `1.5px solid ${light ? 'rgba(255,255,255,.4)' : t.line}`, color: light ? '#fff' : t.ink, borderRadius: pill(t) }}>Ver servicios</a>
+        <a href="#servicios" className="px-6 py-4 font-bold" style={{ border: `1.5px solid ${light ? 'rgba(255,255,255,.4)' : t.line}`, color: light ? '#fff' : t.ink, borderRadius: pill(t) }}>Ver {(cfg.servicesNav ?? 'Servicios').toLowerCase()}</a>
       </div>
       {h.stats && (
         <div className="animate-fade-up mt-8 flex flex-wrap gap-6" style={{ animationDelay: '320ms' }}>
@@ -325,7 +327,7 @@ function BookingSheet({ cfg, open, initial, onClose, phone }: { cfg: BookingConf
   const slots = dayKey ? slotsFor(dayKey, b.hours[0], b.hours[1], b.step, cfg.slug.length) : []
   const svc = cfg.services.find((s) => s.id === service)
   const msg = svc && day && time
-    ? `¡Hola ${b.greet}! Soy ${name.trim() || '…'} y quiero pedir ${b.noun === 'turno' ? 'un turno' : `una ${b.noun}`}:\n\n• ${svc.name}${mode ? ` (${mode})` : ''}\n• ${longDate(day.date)} a las ${time} h\n\n¿Me lo confirman?`
+    ? `¡Hola ${b.greet}! Soy ${name.trim() || '…'} y quiero pedir ${b.noun === 'turno' ? 'un turno' : `una ${b.noun}`}:\n\n• ${svc.name}${mode ? ` (${mode})` : ''}\n• ${longDate(day.date)} a las ${time} h\n\n¿Me confirman?`
     : ''
   if (!open) return null
   const choice = (active: boolean) => (active ? { background: t.soft, borderColor: t.accent, color: t.accent } : { background: t.surface, borderColor: t.line })
