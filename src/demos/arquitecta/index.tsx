@@ -8,8 +8,8 @@ const cfg: BookingConfig = {
   logo: Building2,
   theme: {
     bg: '#f5f4f1', surface: '#ffffff', ink: '#161616', muted: '#66625c', accent: '#9c6b4a', accentInk: '#ffffff', soft: '#ece3da', line: '#e2ded7', dark: '#161616',
-    fonts: 'family=Syne:wght@500;600;700;800&family=Inter:wght@400;500;600',
-    display: '"Syne", sans-serif', body: '"Inter", sans-serif', shape: 'square', accentOnDark: '#d8a57f',
+    fonts: 'family=Josefin+Sans:wght@300;400;600;700&family=Inter:wght@400;500;600',
+    display: '"Josefin Sans", sans-serif', body: '"Inter", sans-serif', shape: 'square', accentOnDark: '#d8a57f',
   },
   hero: {
     kicker: 'Arquitectura y dirección de obra',
