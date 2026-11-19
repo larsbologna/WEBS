@@ -8,7 +8,7 @@ export type AdminConfig = {
   /** stock (tienda) o insumos (servicios). cost = costo unitario, price = precio de venta (solo tienda) */
   products: { name: string; cat: string; cost: number; price: number; stock: number; min: number; unit?: string }[]
   /** solo servicios: lo que se vende en cada turno */
-  services?: { name: string; price: number; weight?: number }[]
+  services?: { name: string; price: number; weight?: number; min?: number }[]
   staff?: string[]
   /** cantidad de ventas/turnos por día [mín, máx] */
   perDay: [number, number]

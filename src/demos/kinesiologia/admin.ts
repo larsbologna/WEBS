@@ -32,12 +32,14 @@ const cfg: AdminConfig = {
     {
       "name": "RPG",
       "price": 22000,
-      "weight": 2
+      "weight": 2,
+      "min": 50
     },
     {
       "name": "Masoterapia",
       "price": 18000,
-      "weight": 2
+      "weight": 2,
+      "min": 40
     }
   ],
   "products": [

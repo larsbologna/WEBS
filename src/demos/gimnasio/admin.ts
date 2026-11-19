@@ -4,8 +4,8 @@ const cfg: AdminConfig = {
   "accent": "#9acd00",
   "kind": "services",
   "perDay": [
-    30,
-    55
+    24,
+    40
   ],
   "hours": [
     7,
@@ -26,26 +26,12 @@ const cfg: AdminConfig = {
     "Martín"
   ],
   "services": [
-    {
-      "name": "Plan libre",
-      "price": 36000,
-      "weight": 5
-    },
-    {
-      "name": "Plan 2 veces",
-      "price": 28000,
-      "weight": 3
-    },
-    {
-      "name": "Pase diario",
-      "price": 5000,
-      "weight": 2
-    },
-    {
-      "name": "Personal trainer",
-      "price": 15000,
-      "weight": 1
-    }
+    { "name": "Musculación", "price": 4500, "weight": 5, "min": 60 },
+    { "name": "Funcional", "price": 4500, "weight": 4, "min": 60 },
+    { "name": "Cross training", "price": 5000, "weight": 3, "min": 60 },
+    { "name": "Yoga", "price": 4500, "weight": 2, "min": 60 },
+    { "name": "Pilates mat", "price": 4500, "weight": 2, "min": 50 },
+    { "name": "Personal trainer", "price": 15000, "weight": 1, "min": 60 }
   ],
   "products": [
     {

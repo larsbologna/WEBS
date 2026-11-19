@@ -3,8 +3,8 @@ const cfg: AdminConfig = {
   name: 'Aurum Barber Club', accent: '#a07c2c', kind: 'services', perDay: [18, 28], hours: [10, 21], closedDows: [0, 1],
   channels: ['Web', 'WhatsApp', 'Walk-in'], staff: ['Nico', 'Tomi', 'Lucas'],
   services: [
-    { name: 'Fade / degradé', price: 13500, weight: 4 }, { name: 'Corte + barba', price: 19000, weight: 3 }, { name: 'Corte clásico', price: 12000, weight: 3 },
-    { name: 'Barba completa', price: 8500, weight: 2 }, { name: 'Afeitado a navaja', price: 10000, weight: 1 }, { name: 'Platinado / color', price: 38000, weight: 0.4 }, { name: 'Corte kids', price: 9000, weight: 1 },
+    { name: 'Fade / degradé', price: 13500, weight: 4 }, { name: 'Corte + barba', price: 19000, weight: 3, min: 45 }, { name: 'Corte clásico', price: 12000, weight: 3 },
+    { name: 'Barba completa', price: 8500, weight: 2, min: 20 }, { name: 'Afeitado a navaja', price: 10000, weight: 1, min: 30 }, { name: 'Platinado / color', price: 38000, weight: 0.4, min: 120 }, { name: 'Corte kids', price: 9000, weight: 1 },
   ],
   products: [
     { name: 'Cera mate 100 g', cat: 'Productos', cost: 4200, price: 0, stock: 14, min: 6 },

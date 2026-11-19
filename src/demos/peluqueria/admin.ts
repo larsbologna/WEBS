@@ -3,8 +3,8 @@ const cfg: AdminConfig = {
   name: 'Studio Bella', accent: '#b97a72', kind: 'services', perDay: [10, 18], hours: [9, 20], closedDows: [0, 1],
   channels: ['Web', 'WhatsApp', 'Instagram'], staff: ['Belén', 'Carla', 'Romina', 'Juli'],
   services: [
-    { name: 'Corte y brushing', price: 16000, weight: 5 }, { name: 'Balayage', price: 75000, weight: 1.2 }, { name: 'Color completo', price: 38000, weight: 2 },
-    { name: 'Retoque de raíz', price: 26000, weight: 2 }, { name: 'Alisado con keratina', price: 62000, weight: 1 }, { name: 'Nutrición intensiva', price: 15000, weight: 2 }, { name: 'Peinado de fiesta', price: 28000, weight: 1 },
+    { name: 'Corte y brushing', price: 16000, weight: 5, min: 60 }, { name: 'Balayage', price: 75000, weight: 1.2, min: 180 }, { name: 'Color completo', price: 38000, weight: 2, min: 120 },
+    { name: 'Retoque de raíz', price: 26000, weight: 2, min: 90 }, { name: 'Alisado con keratina', price: 62000, weight: 1, min: 150 }, { name: 'Nutrición intensiva', price: 15000, weight: 2, min: 45 }, { name: 'Peinado de fiesta', price: 28000, weight: 1, min: 60 },
   ],
   products: [
     { name: 'Tintura profesional (tubo)', cat: 'Color', cost: 5600, price: 0, stock: 38, min: 20 },

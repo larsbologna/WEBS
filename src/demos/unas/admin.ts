@@ -28,27 +28,32 @@ const cfg: AdminConfig = {
     {
       "name": "Semipermanente",
       "price": 12000,
-      "weight": 4
+      "weight": 4,
+      "min": 60
     },
     {
       "name": "Kapping en gel",
       "price": 16000,
-      "weight": 3
+      "weight": 3,
+      "min": 75
     },
     {
       "name": "Esculpidas",
       "price": 22000,
-      "weight": 2
+      "weight": 2,
+      "min": 120
     },
     {
       "name": "Spa de manos",
       "price": 10000,
-      "weight": 1
+      "weight": 1,
+      "min": 50
     },
     {
       "name": "Pedicura spa",
       "price": 15000,
-      "weight": 2
+      "weight": 2,
+      "min": 70
     }
   ],
   "products": [

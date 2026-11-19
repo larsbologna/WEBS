@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, Briefcase, LayoutDashboard, CalendarCheck, Search, ShoppingCart, Smartphone, MessageCircle, Sparkles, MapPin, Store, Zap, X } from 'lucide-react'
+import { ArrowUpRight, Boxes, Briefcase, LayoutDashboard, CalendarCheck, Search, MessageCircle, Sparkles, MapPin, Store, Wallet, X, TrendingUp, Globe } from 'lucide-react'
 import { DEMOS, GROUPS, BRAND, type Category, type Group } from '../demos/meta'
 import { SmartImg, WhatsAppSim, Reveal } from '../shared/ui'
 import { cx, img } from '../shared/format'
+import { verticalOf } from '../admin/verticals'
+import { KIND } from '../admin/kinds'
 
 export default function Showroom() {
   const [q, setQ] = useState('')
@@ -14,7 +16,7 @@ export default function Showroom() {
   const [contact, setContact] = useState(false)
 
   useEffect(() => {
-    document.title = 'Iván | Gestor de Presencia Online — Showroom'
+    document.title = 'Iván | Sistema de gestión para negocios — Showroom'
   }, [])
 
   const list = useMemo(() => {
@@ -41,28 +43,29 @@ export default function Showroom() {
           </div>
         </div>
         <button onClick={() => setContact(true)} className="hidden rounded-full border border-white/15 px-4 py-2 text-sm font-semibold transition hover:bg-white hover:text-black sm:block">
-          Quiero mi web
+          Quiero el panel
         </button>
       </header>
 
       <main className="relative z-10">
         {/* HERO */}
-        <section className="mx-auto max-w-6xl px-5 pb-8 pt-6 sm:pt-14">
+        <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-8 pt-6 sm:pt-14 lg:grid-cols-[1.1fr_1fr]">
+          <div>
           <div className="animate-fade-up mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[12px] text-white/70">
-            <MapPin className="h-3.5 w-3.5 text-lime-300" /> Webs para negocios y profesionales de Berazategui y alrededores
+            <MapPin className="h-3.5 w-3.5 text-lime-300" /> Sistema de gestión para negocios y profesionales
           </div>
           <h1 className="animate-fade-up text-[44px] font-extrabold leading-[0.95] tracking-tight sm:text-7xl" style={{ animationDelay: '80ms' }}>
-            Así podría verse <br className="hidden sm:block" />
-            <span className="font-serif-display font-normal italic text-lime-300">tu negocio</span> en internet.
+            Tu negocio, <br className="hidden sm:block" />
+            <span className="font-serif-display font-normal italic text-lime-300">ordenado</span> en un solo panel.
           </h1>
           <p className="animate-fade-up mt-5 max-w-xl text-[16px] leading-relaxed text-white/65 sm:text-lg" style={{ animationDelay: '160ms' }}>
-            Elegí tu rubro o tu profesión y probá una web real funcionando: pedidos por WhatsApp, turnos online, catálogo con precios y todo lo que tus clientes buscan antes de visitarte.
+            Agenda de turnos, pedidos, stock, gastos y ganancias desde el celular, adaptado a tu rubro. Elegí el tuyo y probá el panel funcionando. Y si querés, sumale tu web con pedidos y turnos por WhatsApp.
           </p>
           <div className="animate-fade-up mt-7 grid grid-cols-3 gap-2 sm:max-w-xl" style={{ animationDelay: '240ms' }}>
             {[
-              { icon: ShoppingCart, t: 'Pedidos', s: 'sin comisiones' },
-              { icon: CalendarCheck, t: 'Turnos', s: 'las 24 hs' },
-              { icon: Smartphone, t: 'Pensada', s: 'para celular' },
+              { icon: CalendarCheck, t: 'Agenda', s: 'turnos y recordatorios' },
+              { icon: Wallet, t: 'Finanzas', s: 'tu ganancia real' },
+              { icon: Boxes, t: 'Stock', s: 'avisos de reposición' },
             ].map(({ icon: I, t, s }) => (
               <div key={t} className="rounded-2xl border border-white/10 bg-white/[.04] p-3">
                 <I className="mb-2 h-5 w-5 text-lime-300" />
@@ -71,6 +74,8 @@ export default function Showroom() {
               </div>
             ))}
           </div>
+          </div>
+          <PanelPreview />
         </section>
 
         {/* BUSCADOR + FILTROS */}
@@ -81,7 +86,7 @@ export default function Showroom() {
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Buscá tu rubro o profesión: librería, uñas, odontóloga…"
+                placeholder="Buscá tu rubro o profesión: barbería, veterinaria, contador…"
                 className="h-11 w-full bg-transparent text-[15px] outline-none placeholder:text-white/40"
               />
               {q && <button onClick={() => setQ('')} aria-label="Limpiar"><X className="h-4 w-4 text-white/60" /></button>}
@@ -135,33 +140,33 @@ export default function Showroom() {
               {list.map((d, i) => (
                 <Reveal key={d.slug} delay={(i % 3) * 70}>
                   <div className="group overflow-hidden rounded-3xl bg-white/[.04] ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:ring-lime-300/50">
-                  <Link to={`/demo/${d.slug}`} className="block">
+                  <Link to={`/demo/${d.slug}/admin`} className="block">
                     <div className="relative">
                       <SmartImg src={img(d.image, 700, 460)} alt={`${d.rubro} — ${d.name}`} fallback={d.fallback} className="aspect-[16/10.5] transition duration-700 group-hover:scale-[1.04]" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b12] via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b12] via-[#0b0b12]/10 to-transparent" />
                       <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-semibold backdrop-blur">
                         <span className="relative flex h-1.5 w-1.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-300 opacity-75" /><span className="h-1.5 w-1.5 rounded-full bg-lime-300" /></span>
-                        Demo interactiva
+                        Panel + web
                       </span>
                       <span className="absolute right-3 top-3 font-serif-display text-3xl italic text-white/80">{d.num}</span>
                     </div>
                     <div className="p-5 pt-1">
                       <div className="text-[12px] font-semibold uppercase tracking-[.18em] text-lime-300">{d.rubro}</div>
                       <h3 className="mt-1 text-2xl font-extrabold tracking-tight">{d.name}</h3>
-                      <p className="mt-2 text-[14px] leading-relaxed text-white/60">{d.description}</p>
                       <div className="mt-3 flex flex-wrap gap-1.5">
-                        {d.features.map((f) => (
-                          <span key={f} className="rounded-full bg-white/[.06] px-2.5 py-1 text-[11.5px] text-white/70">{f}</span>
+                        {panelModules(d.slug).map((m, j) => (
+                          <span key={m} className={cx('rounded-full px-2.5 py-1 text-[11.5px] font-bold', j === 0 ? 'bg-lime-300 text-black' : 'bg-white/[.08] text-white/80')}>{m}</span>
                         ))}
                       </div>
+                      <p className="mt-3 text-[13px] leading-relaxed text-white/50"><span className="font-bold text-white/70">Web incluida:</span> {d.description}</p>
                     </div>
                   </Link>
                   <div className="grid grid-cols-[1fr_auto] gap-2 px-5 pb-5">
-                    <Link to={`/demo/${d.slug}`} className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 font-bold text-black transition hover:bg-lime-300">
-                      Ver demostración <ArrowUpRight className="h-5 w-5" />
+                    <Link to={`/demo/${d.slug}/admin`} className="flex items-center justify-between rounded-2xl bg-lime-300 px-4 py-3 font-extrabold text-black transition hover:bg-white">
+                      <span className="flex items-center gap-2"><LayoutDashboard className="h-5 w-5" /> Probar el panel</span> <ArrowUpRight className="h-5 w-5" />
                     </Link>
-                    <Link to={`/demo/${d.slug}/admin`} className="flex items-center gap-1.5 rounded-2xl bg-white/[.08] px-3.5 py-3 text-[13px] font-bold text-white ring-1 ring-white/10 transition hover:bg-white/15" aria-label={`Panel de administración de ${d.name}`}>
-                      <LayoutDashboard className="h-4 w-4 text-lime-300" /> Panel
+                    <Link to={`/demo/${d.slug}`} className="flex items-center gap-1.5 rounded-2xl bg-white/[.08] px-3.5 py-3 text-[13px] font-bold text-white ring-1 ring-white/10 transition hover:bg-white/15" aria-label={`Web de ${d.name}`}>
+                      <Globe className="h-4 w-4 text-lime-300" /> Web
                     </Link>
                   </div>
                   </div>
@@ -175,16 +180,17 @@ export default function Showroom() {
         <section className="mx-auto max-w-6xl px-5 py-12">
           <Reveal>
             <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl">
-              Una web que <span className="font-serif-display font-normal italic text-lime-300">trabaja</span> por vos.
+              Un sistema que <span className="font-serif-display font-normal italic text-lime-300">trabaja</span> por vos.
             </h2>
+            <p className="mt-3 max-w-2xl text-[16px] text-white/60">Dejá el cuaderno, el Excel y las notas del celular. Todo tu negocio en un panel simple, armado para tu rubro.</p>
           </Reveal>
           <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {[
-              { icon: Search, t: 'Te encuentran en Google', d: 'Cuando alguien busca tu rubro en la zona, aparecés vos con fotos, horarios y ubicación.' },
-              { icon: MessageCircle, t: 'Consultas por WhatsApp', d: 'Pedidos y consultas llegan ordenados, con todo el detalle. Menos idas y vueltas.' },
-              { icon: CalendarCheck, t: 'Turnos sin atender el teléfono', d: 'Tus clientes reservan solos, de día o de noche, mientras vos trabajás.' },
-              { icon: Zap, t: 'Sin comisiones de apps', d: 'Tu web es tuya: no pagás un porcentaje por cada venta como en las plataformas.' },
-              { icon: LayoutDashboard, t: 'Tu panel de control', d: 'Ganancias, stock, pedidos y pagos del mes en tu celular. Probalo con el botón "Panel" de cada demo.' },
+              { icon: CalendarCheck, t: 'Agenda que no se te escapa', d: 'Turnos por profesional, quién viene y quién faltó, recordatorios por WhatsApp y huecos libres para ofrecer.' },
+              { icon: TrendingUp, t: 'Sabés cuánto ganás', d: 'Ingresos, gastos y ganancia neta del mes, comparados con el mes anterior. Sin hacer cuentas.' },
+              { icon: Wallet, t: 'Ningún pago vencido', d: 'Alquiler, proveedores, sueldos e impuestos con aviso antes de que venzan.' },
+              { icon: Boxes, t: 'Stock e insumos al día', d: 'Te avisa lo que se está terminando y cargás el pedido al proveedor en un toque.' },
+              { icon: Globe, t: 'Y tu web, si la querés', d: 'Una web con tus servicios y precios, conectada a tu WhatsApp para recibir pedidos y turnos.' },
             ].map(({ icon: I, t, d }, i) => (
               <Reveal key={t} delay={i * 60} className="rounded-3xl border border-white/10 bg-white/[.03] p-5">
                 <I className="h-6 w-6 text-lime-300" />
@@ -199,12 +205,12 @@ export default function Showroom() {
         <section className="mx-auto max-w-6xl px-5 py-12">
           <Reveal className="overflow-hidden rounded-[32px] bg-lime-300 p-6 text-black sm:p-10">
             <div className="text-[12px] font-bold uppercase tracking-[.2em]">Cómo trabajo</div>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-5xl">De la charla a tu web online, <span className="font-serif-display font-normal italic">fácil.</span></h2>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-5xl">De la charla a tu negocio ordenado, <span className="font-serif-display font-normal italic">fácil.</span></h2>
             <ol className="mt-8 grid gap-4 sm:grid-cols-3">
               {[
-                ['Charlamos', 'Me contás qué vendés, cómo atendés y qué te consultan tus clientes.'],
-                ['Diseño tu web', 'Con tus fotos, tus precios y tu estilo. Vos revisás y ajustamos.'],
-                ['Publicamos', 'Tu web online, conectada a tu WhatsApp, Instagram y Google Maps.'],
+                ['Charlamos', 'Me contás cómo trabajás: tus servicios o productos, tu equipo, tus gastos fijos.'],
+                ['Armo tu panel', 'Cargado con tus precios, tus profesionales y tu stock. Y tu web, si la querés.'],
+                ['Te acompaño', 'Te enseño a usarlo en una charla y quedo a mano para lo que necesites.'],
               ].map(([t, d], i) => (
                 <li key={t} className="rounded-2xl bg-black/[.06] p-5">
                   <div className="font-serif-display text-4xl italic">0{i + 1}</div>
@@ -214,7 +220,7 @@ export default function Showroom() {
               ))}
             </ol>
             <button onClick={() => setContact(true)} className="mt-8 inline-flex items-center gap-2 rounded-full bg-black px-6 py-3.5 font-bold text-white transition active:scale-95">
-              <Sparkles className="h-4 w-4 text-lime-300" /> Quiero una web así para mi negocio
+              <Sparkles className="h-4 w-4 text-lime-300" /> Quiero el panel para mi negocio
             </button>
           </Reveal>
         </section>
@@ -242,7 +248,7 @@ export default function Showroom() {
       {/* CTA fija móvil */}
       <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-[#0b0b12] via-[#0b0b12]/90 to-transparent p-4 pt-8 sm:hidden" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
         <button onClick={() => setContact(true)} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-lime-300 py-3.5 font-extrabold text-black shadow-lg shadow-lime-300/20 active:scale-[.98]">
-          <MessageCircle className="h-5 w-5" /> Hablemos de tu web
+          <MessageCircle className="h-5 w-5" /> Quiero el panel para mi negocio
         </button>
       </div>
 
@@ -250,10 +256,55 @@ export default function Showroom() {
         open={contact}
         onClose={() => setContact(false)}
         business={`${BRAND.name} | Presencia Online`}
-        message={'¡Hola Iván! Vi las demos y me interesa una web para mi negocio o profesión. ¿Cuándo podemos charlar?'}
+        message={'¡Hola Iván! Vi las demos y me interesa el panel de gestión para mi negocio. ¿Cuándo podemos charlar?'}
       />
     </div>
   )
 }
 
 const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+
+/** Módulos del panel de cada rubro, para mostrar en la tarjeta */
+function panelModules(slug: string) {
+  const v = verticalOf(slug)
+  return KIND(slug) === 'shop' ? [v.ordersTitle!, v.stockTitle!, 'Finanzas', 'Pagos'] : [v.tab, 'Finanzas', 'Insumos', 'Pagos']
+}
+
+/** Vista previa decorativa del panel en la portada (lleva a la demo real) */
+function PanelPreview() {
+  const bars = [38, 52, 44, 61, 57, 70, 49, 66, 74, 69, 82, 91]
+  const next = [['16:30', 'Lucía Fernández', 'Fade / degradé', '#6366f1'], ['17:00', 'Martín Gómez', 'Corte + barba', '#f97316'], ['17:30', 'Sofía Romero', 'Barba completa', '#10b981']]
+  return (
+    <Link to="/demo/barberia/admin" className="group relative hidden lg:block" aria-label="Probar el panel de una barbería">
+      <div className="absolute -inset-6 rounded-[40px] bg-lime-300/10 blur-2xl" />
+      <div className="relative rotate-[1.5deg] rounded-[28px] bg-[#f5f7fa] p-4 text-slate-900 shadow-2xl ring-1 ring-white/20 transition duration-500 group-hover:rotate-0" style={{ fontFamily: 'Manrope, sans-serif' }} aria-hidden>
+        <div className="flex items-center gap-2.5">
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#a07c2c] font-extrabold text-white">A</div>
+          <div className="leading-tight"><div className="text-[14px] font-extrabold">Aurum Barber Club</div><div className="text-[11px] text-slate-500">Panel · hoy</div></div>
+          <div className="ml-auto flex gap-1">{['Finanzas', 'Agenda', 'Insumos'].map((t, i) => <span key={t} className={cx('rounded-full px-2.5 py-1 text-[10.5px] font-bold', i === 0 ? 'bg-slate-900 text-white' : 'bg-white text-slate-500')}>{t}</span>)}</div>
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {[['Ganancia neta', '$ 2,3 M', '▲ 14%'], ['Ingresos', '$ 6,4 M', '▲ 9%'], ['Turnos hoy', '19', '4 libres']].map(([l, v, d]) => (
+            <div key={l} className="rounded-2xl bg-white p-2.5"><div className="text-[10px] font-bold uppercase tracking-wide text-slate-500">{l}</div><div className="text-[18px] font-extrabold tabular-nums">{v}</div><div className="text-[10.5px] font-bold text-emerald-600">{d}</div></div>
+          ))}
+        </div>
+        <div className="mt-2 rounded-2xl bg-white p-3">
+          <div className="text-[11px] font-extrabold">Ingresos por día</div>
+          <div className="mt-2 flex h-20 items-end gap-1.5">{bars.map((h, i) => <div key={i} className="flex-1 rounded-t-md bg-[#a07c2c]" style={{ height: `${h}%`, opacity: i === bars.length - 1 ? 1 : 0.55 + i * 0.03 }} />)}</div>
+        </div>
+        <div className="mt-2 grid grid-cols-[1.4fr_1fr] gap-2">
+          <div className="rounded-2xl bg-white p-3">
+            <div className="text-[11px] font-extrabold">Próximos turnos</div>
+            {next.map(([t, n, sv, c]) => <div key={t} className="mt-2 flex items-center gap-2"><span className="h-8 w-1 rounded-full" style={{ background: c }} /><span className="w-10 text-[12px] font-extrabold tabular-nums">{t}</span><span className="min-w-0 leading-tight"><span className="block truncate text-[12px] font-bold">{n}</span><span className="block truncate text-[10.5px] text-slate-500">{sv}</span></span></div>)}
+          </div>
+          <div className="space-y-2">
+            <div className="rounded-2xl bg-amber-50 p-2.5 text-[11px] font-bold text-amber-700">⏰ Alquiler vence en 3 días</div>
+            <div className="rounded-2xl bg-red-50 p-2.5 text-[11px] font-bold text-red-700">📦 Aceite para barba: quedan 4</div>
+            <div className="rounded-2xl bg-emerald-50 p-2.5 text-[11px] font-bold text-emerald-700">✓ 3 recordatorios enviados</div>
+          </div>
+        </div>
+      </div>
+      <div className="relative mt-4 flex items-center justify-center gap-2 text-[14px] font-bold text-lime-300">Probá este panel <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></div>
+    </Link>
+  )
+}

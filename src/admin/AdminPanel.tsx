@@ -1,16 +1,17 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AlertTriangle, ArrowDownRight, ArrowUpRight, Boxes, CalendarClock, Check, CheckCircle2, ChevronDown, Circle, Clock, ExternalLink, LayoutDashboard, LayoutGrid, Lock, Minus, Plus, Receipt, Search, ShoppingBag, Truck, Wallet, X } from 'lucide-react'
+import { AlertTriangle, ArrowDownRight, ArrowUpRight, Boxes, CalendarClock, Check, CheckCircle2, ChevronDown, Clock, ExternalLink, LayoutDashboard, LayoutGrid, Lock, Minus, Plus, Receipt, Search, ShoppingBag, Truck, Wallet, X } from 'lucide-react'
 import type { AdminConfig } from './types'
 import { generateExpenses, generateSales, dayKeyOf, type Expense, type Sale } from './data'
 import { Sheet, toast } from '../shared/ui'
 import { safeRead, safeWrite } from '../shared/store'
 import { cx, money } from '../shared/format'
 import { DEMOS } from '../demos/meta'
+import { Agenda } from './Agenda'
+import { cap, verticalOf, type Vertical } from './verticals'
+import { BG, Card, HBars, INK, LINE, MUTED, STATUS, StatusPill, startOfToday, sum } from './ui'
 
 type Tab = 'resumen' | 'ventas' | 'stock' | 'pagos'
-const INK = '#0f172a', MUTED = '#64748b', LINE = '#e2e8f0', BG = '#f5f7fa'
-const STATUS = { good: '#15803d', warn: '#b45309', crit: '#b91c1c', idle: '#64748b' }
 const short = (n: number) => (Math.abs(n) >= 1e6 ? `$ ${(n / 1e6).toLocaleString('es-AR', { maximumFractionDigits: 1 })} M` : Math.abs(n) >= 1e4 ? `$ ${Math.round(n / 1e3).toLocaleString('es-AR')} mil` : money(n))
 const pct = (a: number, b: number) => (b ? ((a - b) / b) * 100 : 0)
 const DAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb']
@@ -26,7 +27,11 @@ export default function AdminPanel({ slug, cfg }: { slug: string; cfg: AdminConf
   const meta = DEMOS.find((d) => d.slug === slug)!
   const [auth, setAuth] = useState(() => { try { return sessionStorage.getItem('admin-auth:' + slug) === '1' } catch { return false } })
   const [tab, setTab] = useState<Tab>('resumen')
-  const baseSales = useMemo(() => generateSales(slug, cfg), [slug, cfg])
+  const v = useMemo(() => verticalOf(slug), [slug])
+  const baseSales = useMemo(() => {
+    const ren: Record<string, string> = { Preparando: v.flow![1], Entregado: v.flow![3] }
+    return generateSales(slug, cfg, v).map((s) => (cfg.kind === 'shop' && ren[s.status] ? { ...s, status: ren[s.status] } : s))
+  }, [slug, cfg, v])
   const baseExp = useMemo(() => generateExpenses(slug, cfg), [slug, cfg])
   const [statusOv, setStatusOv] = usePersist<Record<string, string>>(`admin:${slug}:status`, {})
   const [paidOv, setPaidOv] = usePersist<Record<string, boolean>>(`admin:${slug}:paid`, {})
@@ -42,19 +47,19 @@ export default function AdminPanel({ slug, cfg }: { slug: string; cfg: AdminConf
   ].sort((a, b) => a.due.getTime() - b.due.getTime()), [baseExp, customExp, paidOv])
   const stock = useMemo(() => cfg.products.map((p) => ({ ...p, stock: Math.max(0, p.stock + (stockDelta[p.name] ?? 0)) })), [cfg.products, stockDelta])
 
-  const ctx = { cfg, sales, expenses, stock, setStatusOv, setPaidOv, setCustomExp, setStockDelta, accent: cfg.accent }
+  const ctx = { cfg, v, sales, expenses, stock, setStatusOv, setPaidOv, setCustomExp, setStockDelta, accent: cfg.accent }
 
   if (!auth) return <Login cfg={cfg} onIn={() => { try { sessionStorage.setItem('admin-auth:' + slug, '1') } catch { /* sin storage */ } setAuth(true) }} slug={slug} />
 
   const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
-    { id: 'resumen', label: 'Resumen', icon: LayoutDashboard },
-    { id: 'ventas', label: cfg.kind === 'shop' ? 'Pedidos' : 'Agenda', icon: cfg.kind === 'shop' ? ShoppingBag : CalendarClock },
-    { id: 'stock', label: cfg.kind === 'shop' ? 'Stock' : 'Insumos', icon: Boxes },
+    { id: 'resumen', label: 'Finanzas', icon: LayoutDashboard },
+    { id: 'ventas', label: cfg.kind === 'shop' ? v.ordersTitle! : v.tab, icon: cfg.kind === 'shop' ? ShoppingBag : CalendarClock },
+    { id: 'stock', label: cfg.kind === 'shop' ? v.stockTitle! : 'Insumos', icon: Boxes },
     { id: 'pagos', label: 'Pagos', icon: Wallet },
   ]
   const lowCount = stock.filter((p) => p.stock <= p.min).length
   const overdue = expenses.filter((e) => !e.paid && e.due < startOfToday()).length
-  const newOrders = cfg.kind === 'shop' ? sales.filter((s) => s.status === 'Nuevo').length : sales.filter((s) => s.dayKey === dayKeyOf(new Date()) && s.status === 'Confirmado').length
+  const newOrders = cfg.kind === 'shop' ? sales.filter((s) => s.status === v.flow![0]).length : sales.filter((s) => s.dayKey === dayKeyOf(new Date()) && (s.status === 'Confirmado' || s.status === 'A confirmar')).length
   const badge: Partial<Record<Tab, number>> = { ventas: newOrders, stock: lowCount, pagos: overdue }
 
   return (
@@ -83,7 +88,7 @@ export default function AdminPanel({ slug, cfg }: { slug: string; cfg: AdminConf
       <main key={tab} className="mx-auto max-w-6xl px-4 py-5">
         <div className="mb-4 flex items-center gap-2 rounded-2xl border border-dashed border-violet-400/50 bg-violet-50 px-3 py-2 text-[12.5px] text-violet-900">
           <Lock className="h-4 w-4 shrink-0 text-violet-600" />
-          <span><b>Para tu negocio:</b> solo vos ves este panel. Ventas, stock y pagos en un lugar, desde el celular. Datos de ejemplo de {meta.name}.</span>
+          <span><b>Para tu negocio:</b> solo vos ves este panel. {cfg.kind === 'shop' ? `${v.ordersTitle}, ${v.stockTitle!.toLowerCase()}` : `${v.agendaTitle}, insumos`}, gastos y ganancias en un solo lugar, desde el celular. Datos de ejemplo de {meta.name}.</span>
         </div>
         {tab === 'resumen' && <Resumen {...ctx} go={setTab} />}
         {tab === 'ventas' && (cfg.kind === 'shop' ? <Pedidos {...ctx} /> : <Agenda {...ctx} />)}
@@ -104,10 +109,9 @@ export default function AdminPanel({ slug, cfg }: { slug: string; cfg: AdminConf
   )
 }
 
-const startOfToday = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d }
 
 type Ctx = {
-  cfg: AdminConfig; sales: Sale[]; expenses: Expense[]; stock: AdminConfig['products']; accent: string
+  cfg: AdminConfig; v: Vertical; sales: Sale[]; expenses: Expense[]; stock: AdminConfig['products']; accent: string
   setStatusOv: (f: (s: Record<string, string>) => Record<string, string>) => void
   setPaidOv: (f: (s: Record<string, boolean>) => Record<string, boolean>) => void
   setCustomExp: (f: (s: (Omit<Expense, 'due'> & { due: string })[]) => (Omit<Expense, 'due'> & { due: string })[]) => void
@@ -141,12 +145,6 @@ function Login({ cfg, onIn, slug }: { cfg: AdminConfig; onIn: () => void; slug: 
 }
 
 /* ───────────── piezas ───────────── */
-const Card = ({ children, className, title, action }: { children: ReactNode; className?: string; title?: string; action?: ReactNode }) => (
-  <section className={cx('rounded-2xl border bg-white p-4', className)} style={{ borderColor: LINE }}>
-    {title && <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-[15px] font-extrabold">{title}</h3>{action}</div>}
-    {children}
-  </section>
-)
 function Kpi({ label, value, delta, sub, invert }: { label: string; value: string; delta?: number; sub?: string; invert?: boolean }) {
   const good = delta === undefined ? true : invert ? delta <= 0 : delta >= 0
   return (
@@ -159,10 +157,6 @@ function Kpi({ label, value, delta, sub, invert }: { label: string; value: strin
       </div>
     </div>
   )
-}
-export function StatusPill({ kind, label }: { kind: keyof typeof STATUS; label: string }) {
-  const I = kind === 'good' ? CheckCircle2 : kind === 'crit' ? AlertTriangle : kind === 'warn' ? Clock : Circle
-  return <span className="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11.5px] font-bold" style={{ color: STATUS[kind], background: STATUS[kind] + '14' }}><I className="h-3.5 w-3.5" />{label}</span>
 }
 
 /* Gráfico de barras de una serie con tooltip */
@@ -207,26 +201,13 @@ function DailyChart({ data, accent, unit }: { data: { label: string; sub: string
 }
 function niceStep(x: number) { const p = Math.pow(10, Math.floor(Math.log10(x || 1))); const n = x / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p }
 
-function HBars({ rows, accent, fmt = money }: { rows: { label: string; value: number; sub?: string }[]; accent: string; fmt?: (n: number) => string }) {
-  const max = Math.max(...rows.map((r) => r.value), 1)
-  return (
-    <ul className="space-y-2.5">
-      {rows.map((r) => (
-        <li key={r.label}>
-          <div className="flex justify-between gap-3 text-[13px]"><span className="min-w-0 truncate font-semibold">{r.label}</span><span className="shrink-0 tabular-nums" style={{ color: MUTED }}>{r.sub ? `${r.sub} · ` : ''}<b style={{ color: INK }}>{fmt(r.value)}</b></span></div>
-          <div className="mt-1 h-2 rounded-full" style={{ background: LINE }}><div className="h-2 rounded-full transition-all duration-700" style={{ width: `${(r.value / max) * 100}%`, background: accent }} /></div>
-        </li>
-      ))}
-    </ul>
-  )
-}
 
 /* ───────────── Resumen ───────────── */
-function Resumen({ cfg, sales, expenses, stock, accent, go }: Ctx & { go: (t: Tab) => void }) {
+function Resumen({ cfg, v, sales, expenses, stock, accent, go }: Ctx & { go: (t: Tab) => void }) {
   const today = startOfToday()
   const cut = new Date(today); cut.setDate(today.getDate() - 29)
   const prevCut = new Date(today); prevCut.setDate(today.getDate() - 59)
-  const valid = sales.filter((s) => s.status !== 'Cancelado' && s.status !== 'Ausente')
+  const valid = sales.filter((s) => s.status !== 'Cancelado' && s.status !== 'Ausente' && s.date <= today)
   const cur = valid.filter((s) => s.date >= cut), prev = valid.filter((s) => s.date >= prevCut && s.date < cut)
   const income = sum(cur, (s) => s.total), prevIncome = sum(prev, (s) => s.total)
   const cogs = cfg.kind === 'shop' ? sum(cur, (s) => s.cost) : 0
@@ -252,21 +233,21 @@ function Resumen({ cfg, sales, expenses, stock, accent, go }: Ctx & { go: (t: Ta
 
   return (
     <div className="space-y-4">
-      <div className="flex items-end justify-between"><h2 className="text-2xl font-extrabold tracking-tight">Resumen</h2><span className="text-[12px] font-semibold" style={{ color: MUTED }}>Últimos 30 días vs. 30 anteriores</span></div>
+      <div className="flex items-end justify-between"><h2 className="text-2xl font-extrabold tracking-tight">Finanzas</h2><span className="text-[12px] font-semibold" style={{ color: MUTED }}>Últimos 30 días vs. 30 anteriores</span></div>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Kpi label="Ingresos" value={short(income)} delta={pct(income, prevIncome)} />
         <Kpi label="Ganancia neta" value={short(net)} delta={pct(net, prevNet)} sub={`margen ${Math.round((net / income) * 100)}%`} />
         <Kpi label="Gastos del mes" value={short(exp + cogs)} sub={cfg.kind === 'shop' ? `mercadería ${short(cogs)}` : `${expenses.filter((e) => !e.paid).length} pagos pendientes`} />
-        <Kpi label={cfg.kind === 'shop' ? 'Ticket promedio' : 'Turnos'} value={cfg.kind === 'shop' ? money(ticket) : String(cur.length)} delta={cfg.kind === 'shop' ? pct(ticket, prevTicket) : pct(cur.length, prev.length)} sub={cfg.kind === 'shop' ? `${cur.length} ventas` : `promedio ${money(ticket)}`} />
+        <Kpi label={cfg.kind === 'shop' ? 'Ticket promedio' : cap(v.unit[1])} value={cfg.kind === 'shop' ? money(ticket) : String(cur.length)} delta={cfg.kind === 'shop' ? pct(ticket, prevTicket) : pct(cur.length, prev.length)} sub={cfg.kind === 'shop' ? `${cur.length} ventas` : `promedio ${money(ticket)}`} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3 [&>*]:min-w-0">
         <Card title="Ingresos por día" className="lg:col-span-2">
-          <DailyChart data={chart} accent={accent} unit={cfg.kind === 'shop' ? 'ventas' : 'turnos'} />
+          <DailyChart data={chart} accent={accent} unit={cfg.kind === 'shop' ? 'ventas' : v.unit[1]} />
         </Card>
         <Card title="Hoy">
           <div className="text-3xl font-extrabold tabular-nums">{money(sum(todaySales, (s) => s.total))}</div>
-          <div className="text-[13px]" style={{ color: MUTED }}>{todaySales.length} {cfg.kind === 'shop' ? 'ventas hasta ahora' : 'turnos en la agenda'}</div>
+          <div className="text-[13px]" style={{ color: MUTED }}>{todaySales.length} {cfg.kind === 'shop' ? 'ventas hasta ahora' : `${v.unit[1]} en la agenda`}</div>
           <div className="mt-4 space-y-2">
             {(low.length > 0 || overdue.length > 0 || soon.length > 0) ? <>
               {overdue.length > 0 && <button onClick={() => go('pagos')} className="flex w-full items-center gap-2 rounded-xl p-2.5 text-left text-[13px] font-semibold" style={{ background: STATUS.crit + '10', color: STATUS.crit }}><AlertTriangle className="h-4 w-4 shrink-0" /> {overdue.length} pago{overdue.length > 1 ? 's' : ''} vencido{overdue.length > 1 ? 's' : ''} · {money(sum(overdue, (e) => e.amount))}</button>}
@@ -294,27 +275,26 @@ function Resumen({ cfg, sales, expenses, stock, accent, go }: Ctx & { go: (t: Ta
   )
 }
 const Row = ({ k, v, muted }: { k: string; v: string; muted?: boolean }) => <div className="flex justify-between gap-3"><span style={{ color: muted ? MUTED : INK }}>{k}</span><span className={muted ? '' : 'font-bold'}>{v}</span></div>
-const sum = <T,>(a: T[], f: (x: T) => number) => a.reduce((s, x) => s + f(x), 0)
 const groupBy = <T,>(a: T[], f: (x: T) => string) => { const m = new Map<string, T[]>(); a.forEach((x) => { const k = f(x); m.set(k, [...(m.get(k) ?? []), x]) }); return [...m.entries()] }
 
 /* ───────────── Pedidos (tiendas) ───────────── */
-const FLOW = ['Nuevo', 'Preparando', 'Listo', 'Entregado']
-const orderKind = (s: string): keyof typeof STATUS => (s === 'Entregado' ? 'good' : s === 'Cancelado' ? 'crit' : s === 'Nuevo' ? 'warn' : 'idle')
-function Pedidos({ sales, setStatusOv, accent }: Ctx) {
+function Pedidos({ v, sales, setStatusOv, accent }: Ctx) {
+  const FLOW = v.flow!
+  const orderKind = (s: string): keyof typeof STATUS => (s === FLOW[3] ? 'good' : s === 'Cancelado' ? 'crit' : s === FLOW[0] ? 'warn' : 'idle')
   const [filter, setFilter] = useState('Activos')
   const [open, setOpen] = useState<string | null>(null)
   const [limit, setLimit] = useState(15)
   const recent = [...sales].reverse().slice(0, 120)
   const counts = (f: string) => recent.filter((s) => match(s, f)).length
-  const match = (s: Sale, f: string) => f === 'Todos' ? true : f === 'Activos' ? ['Nuevo', 'Preparando', 'Listo'].includes(s.status) : s.status === f
+  const match = (s: Sale, f: string) => f === 'Todos' ? true : f === 'Activos' ? FLOW.slice(0, 3).includes(s.status) : s.status === f
   const list = recent.filter((s) => match(s, filter))
   const advance = (s: Sale) => { const nx = FLOW[FLOW.indexOf(s.status) + 1]; if (!nx) return; setStatusOv((o) => ({ ...o, [s.id]: nx })); toast(`Pedido ${s.id}: ${nx}`) }
   const todayKey = dayKeyOf(new Date())
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-extrabold tracking-tight">Pedidos</h2>
+      <h2 className="text-2xl font-extrabold tracking-tight">{v.ordersTitle}</h2>
       <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4">
-        {['Activos', 'Nuevo', 'Preparando', 'Listo', 'Entregado', 'Todos'].map((f) => (
+        {['Activos', ...FLOW, 'Todos'].map((f) => (
           <button key={f} onClick={() => { setFilter(f); setLimit(15) }} className={cx('shrink-0 rounded-full border px-3.5 py-2 text-[13px] font-bold transition', filter === f ? 'text-white' : 'bg-white')} style={filter === f ? { background: accent, borderColor: accent } : { borderColor: LINE }}>{f} <span className="opacity-60">{counts(f)}</span></button>
         ))}
       </div>
@@ -353,63 +333,8 @@ function Pedidos({ sales, setStatusOv, accent }: Ctx) {
   )
 }
 
-/* ───────────── Agenda (servicios) ───────────── */
-const apptKind = (s: string): keyof typeof STATUS => (s === 'Atendido' ? 'good' : s === 'Ausente' ? 'crit' : 'warn')
-function Agenda({ cfg, sales, setStatusOv, accent }: Ctx) {
-  const keys = [...new Set(sales.map((s) => s.dayKey))].slice(-7).reverse()
-  const [day, setDay] = useState(keys[0])
-  const [who, setWho] = useState('Todos')
-  const list = sales.filter((s) => s.dayKey === day && (who === 'Todos' || s.staff === who))
-  const todayKey = dayKeyOf(new Date())
-  const cut = new Date(); cut.setDate(cut.getDate() - 29); cut.setHours(0, 0, 0, 0)
-  const byStaff = (cfg.staff ?? []).map((st) => { const ss = sales.filter((s) => s.staff === st && s.date >= cut && s.status === 'Atendido'); return { label: st, value: sum(ss, (s) => s.total), sub: `${ss.length} turnos` } }).sort((a, b) => b.value - a.value)
-  const set = (s: Sale, st: string) => { setStatusOv((o) => ({ ...o, [s.id]: st })); toast(`${s.customer}: ${st.toLowerCase()}`) }
-  const absent = sales.filter((s) => s.date >= cut && s.status === 'Ausente').length
-  return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-extrabold tracking-tight">Agenda</h2>
-      <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4">
-        {keys.map((k) => { const d = new Date(k + 'T12:00'); return (
-          <button key={k} onClick={() => setDay(k)} className={cx('flex w-16 shrink-0 flex-col items-center rounded-2xl border py-2 transition', day === k ? 'text-white' : 'bg-white')} style={day === k ? { background: accent, borderColor: accent } : { borderColor: LINE }}>
-            <span className="text-[11px] font-bold uppercase">{k === todayKey ? 'Hoy' : DAYS[d.getDay()]}</span><span className="text-xl font-extrabold">{d.getDate()}</span>
-          </button>) })}
-      </div>
-      {cfg.staff && <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4">{['Todos', ...cfg.staff].map((s) => <button key={s} onClick={() => setWho(s)} className={cx('shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-bold', who === s ? 'text-white' : 'bg-white')} style={who === s ? { background: INK, borderColor: INK } : { borderColor: LINE }}>{s}</button>)}</div>}
-      <div className="grid gap-4 lg:grid-cols-3 [&>*]:min-w-0">
-        <div className="overflow-hidden rounded-2xl border bg-white lg:col-span-2" style={{ borderColor: LINE }}>
-          <div className="flex justify-between border-b px-4 py-3 text-[13px]" style={{ borderColor: LINE }}><b>{list.length} turnos</b><span className="tabular-nums" style={{ color: MUTED }}>Facturación: <b style={{ color: INK }}>{money(sum(list.filter((s) => s.status !== 'Ausente'), (s) => s.total))}</b></span></div>
-          {list.length === 0 && <p className="py-8 text-center font-semibold" style={{ color: MUTED }}>Sin turnos este día.</p>}
-          {list.map((s) => (
-            <div key={s.id} className="flex items-center gap-3 border-b px-4 py-3 last:border-0" style={{ borderColor: LINE }}>
-              <div className="w-12 shrink-0 text-center font-extrabold tabular-nums">{s.time}</div>
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-bold">{s.customer}</div>
-                <div className="truncate text-[12.5px]" style={{ color: MUTED }}>{s.items.map((i) => i.name).join(' + ')}{s.staff ? ` · ${s.staff}` : ''}</div>
-                <div className="mt-1 flex items-center gap-2"><StatusPill kind={apptKind(s.status)} label={s.status} /><span className="text-[12px] font-bold tabular-nums">{money(s.total)}</span></div>
-              </div>
-              {s.status === 'Confirmado' ? (
-                <div className="flex shrink-0 flex-col gap-1">
-                  <button onClick={() => set(s, 'Atendido')} className="rounded-lg px-2.5 py-1.5 text-[12px] font-extrabold text-white" style={{ background: STATUS.good }}>Atendido</button>
-                  <button onClick={() => set(s, 'Ausente')} className="rounded-lg border px-2.5 py-1 text-[12px] font-bold" style={{ borderColor: LINE, color: STATUS.crit }}>Ausente</button>
-                </div>
-              ) : <button onClick={() => set(s, 'Confirmado')} className="shrink-0 text-[12px] font-bold underline" style={{ color: MUTED }}>Deshacer</button>}
-            </div>
-          ))}
-        </div>
-        <div className="space-y-4">
-          {byStaff.length > 0 && <Card title="Facturación por profesional"><HBars rows={byStaff} accent={accent} /></Card>}
-          <Card title="Ausencias del mes">
-            <div className="text-3xl font-extrabold">{absent}</div>
-            <p className="text-[13px]" style={{ color: MUTED }}>Con recordatorios automáticos por WhatsApp se reducen los clientes que no vienen.</p>
-          </Card>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 /* ───────────── Stock ───────────── */
-function Stock({ cfg, stock, setStockDelta, setCustomExp, accent }: Ctx) {
+function Stock({ cfg, v, stock, setStockDelta, setCustomExp, accent }: Ctx) {
   const [q, setQ] = useState('')
   const [onlyLow, setOnlyLow] = useState(false)
   const [order, setOrder] = useState<AdminConfig['products'][number] | null>(null)
@@ -428,7 +353,7 @@ function Stock({ cfg, stock, setStockDelta, setCustomExp, accent }: Ctx) {
   }
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-extrabold tracking-tight">{isShop ? 'Stock' : 'Insumos'}</h2>
+      <h2 className="text-2xl font-extrabold tracking-tight">{isShop ? v.stockTitle : 'Insumos'}</h2>
       <div className="grid grid-cols-3 gap-3">
         <Kpi label={isShop ? 'Productos' : 'Insumos'} value={String(stock.length)} sub={`${sum(stock, (p) => p.stock)} unidades`} />
         <Kpi label="Valor (costo)" value={short(value)} />
