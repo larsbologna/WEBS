@@ -28,27 +28,32 @@ const cfg: AdminConfig = {
     {
       "name": "Control y limpieza",
       "price": 35000,
-      "weight": 4
+      "weight": 4,
+      "min": 40
     },
     {
       "name": "Arreglo de caries",
       "price": 45000,
-      "weight": 3
+      "weight": 3,
+      "min": 45
     },
     {
       "name": "Blanqueamiento",
       "price": 120000,
-      "weight": 1
+      "weight": 1,
+      "min": 60
     },
     {
       "name": "Ortodoncia (control)",
       "price": 60000,
-      "weight": 2
+      "weight": 2,
+      "min": 30
     },
     {
       "name": "Urgencia",
       "price": 40000,
-      "weight": 1
+      "weight": 1,
+      "min": 30
     }
   ],
   "products": [

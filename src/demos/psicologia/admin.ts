@@ -32,7 +32,8 @@ const cfg: AdminConfig = {
     {
       "name": "Sesión de pareja",
       "price": 40000,
-      "weight": 1
+      "weight": 1,
+      "min": 60
     },
     {
       "name": "Primera entrevista",

@@ -3,8 +3,8 @@ const cfg: AdminConfig = {
   name: 'Visión Óptica', accent: '#2f7cf6', kind: 'services', perDay: [8, 15], hours: [9, 19], closedDows: [0],
   channels: ['Web', 'WhatsApp', 'Mostrador'], staff: ['Lic. Fernández', 'Lic. Castro'],
   services: [
-    { name: 'Control visual', price: 15000, weight: 4 }, { name: 'Anteojos completos monofocales', price: 128000, weight: 2 }, { name: 'Multifocales', price: 245000, weight: 0.7 },
-    { name: 'Lentes de sol', price: 89000, weight: 1.2 }, { name: 'Lentes de contacto (adaptación)', price: 42000, weight: 1 }, { name: 'Ajuste / reparación', price: 6000, weight: 2 },
+    { name: 'Control visual', price: 15000, weight: 4, min: 30 }, { name: 'Anteojos completos monofocales', price: 128000, weight: 2 }, { name: 'Multifocales', price: 245000, weight: 0.7 },
+    { name: 'Lentes de sol', price: 89000, weight: 1.2 }, { name: 'Lentes de contacto (adaptación)', price: 42000, weight: 1, min: 45 }, { name: 'Ajuste / reparación', price: 6000, weight: 2, min: 20 },
   ],
   products: [
     { name: 'Armazones acetato', cat: 'Armazones', cost: 28000, price: 0, stock: 84, min: 40 },

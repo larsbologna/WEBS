@@ -27,17 +27,20 @@ const cfg: AdminConfig = {
     {
       "name": "Consulta inicial",
       "price": 28000,
-      "weight": 2
+      "weight": 2,
+      "min": 60
     },
     {
       "name": "Control",
       "price": 24000,
-      "weight": 5
+      "weight": 5,
+      "min": 40
     },
     {
       "name": "Consulta online",
       "price": 22000,
-      "weight": 3
+      "weight": 3,
+      "min": 45
     }
   ],
   "products": [

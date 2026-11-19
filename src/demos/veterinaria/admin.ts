@@ -3,8 +3,8 @@ const cfg: AdminConfig = {
   name: 'Huellitas Veterinaria', accent: '#0f766e', kind: 'services', perDay: [14, 24], hours: [9, 20], closedDows: [0],
   channels: ['Web', 'WhatsApp', 'Teléfono', 'Guardia'], staff: ['Dra. Ríos', 'Dr. Luna', 'Dra. Peralta'],
   services: [
-    { name: 'Consulta clínica', price: 18000, weight: 5 }, { name: 'Vacunación', price: 14000, weight: 4 }, { name: 'Peluquería', price: 22000, weight: 2 },
-    { name: 'Ecografía', price: 32000, weight: 1 }, { name: 'Análisis clínicos', price: 26000, weight: 1.5 }, { name: 'Castración', price: 95000, weight: 0.4 }, { name: 'Limpieza dental', price: 48000, weight: 0.4 },
+    { name: 'Consulta clínica', price: 18000, weight: 5, min: 30 }, { name: 'Vacunación', price: 14000, weight: 4, min: 20 }, { name: 'Peluquería', price: 22000, weight: 2, min: 60 },
+    { name: 'Ecografía', price: 32000, weight: 1, min: 40 }, { name: 'Análisis clínicos', price: 26000, weight: 1.5, min: 20 }, { name: 'Castración', price: 95000, weight: 0.4, min: 120 }, { name: 'Limpieza dental', price: 48000, weight: 0.4, min: 90 },
   ],
   products: [
     { name: 'Vacuna séxtuple (dosis)', cat: 'Vacunas', cost: 5200, price: 0, stock: 34, min: 20 },
